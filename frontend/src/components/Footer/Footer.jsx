@@ -25,7 +25,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="bg-gray-50 pb-4 pt-8">
+    <footer className="bg-black pb-4 pt-8">
       <div className="container">
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
           <div className="md:col-span-2">
@@ -45,20 +45,20 @@ export default function Footer() {
                 />
               </Link>
             </div>
-            <p className="mt-1 font-medium text-neutral-content">
+            <p className="mt-1 font-medium text-base-100">
               {businessInfo?.tagline}
             </p>
 
-            <div className="mt-2 text-sm text-neutral-content">
+            <div className="mt-2 text-sm text-base-100">
               <p>{businessInfo?.bio}</p>
             </div>
           </div>
 
           <div>
-            <h2 className="mb-3 text-base font-bold uppercase text-neutral/90">
+            <h2 className="mb-3 text-base font-bold uppercase text-base-100">
               Categories
             </h2>
-            <ul className="text-[15px] text-neutral-content">
+            <ul className="text-[15px] text-base-100">
               {fiveCategories?.map((category, i) => (
                 <li key={i} className="mb-2">
                   <Link
@@ -73,10 +73,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <h2 className="mb-3 text-base font-bold uppercase text-neutral/90">
+            <h2 className="mb-3 text-base font-bold uppercase text-base-100">
               Information
             </h2>
-            <ul className="text-[15px] text-neutral-content">
+            <ul className="text-[15px] text-base-100">
               <li className="mb-2">
                 <Link to="/shops" className="hover:underline">
                   Shop
@@ -97,10 +97,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <h2 className="mb-3 text-base font-bold uppercase text-neutral/90">
+            <h2 className="mb-3 text-base font-bold uppercase text-base-100">
               Get in Touch
             </h2>
-            <ul className="text-[15px] text-neutral-content">
+            <ul className="text-[15px] text-base-100">
               <li>
                 <p>{contact?.data[0]?.phone}</p>
               </li>
@@ -118,7 +118,7 @@ export default function Footer() {
 
         {/* bottom */}
         <div className="sm:flex sm:items-center sm:justify-between">
-          <span className="text-[15px] text-neutral-content">
+          <span className="text-[15px] text-base-100">
             Copyright© {yearNow != startYear && startYear + " -"} {yearNow}{" "}
             {businessInfo?.companyName}. All Rights Reserved. develop by{" "}
             <Link
@@ -135,7 +135,7 @@ export default function Footer() {
                 key={i}
                 to={social?.url}
                 target="_blank"
-                className="text-xl text-neutral duration-300 hover:text-primary"
+                className="text-xl text-base-100 duration-300 hover:text-primary"
               >
                 {React.createElement(FaIcons[social?.icon])}
               </Link>

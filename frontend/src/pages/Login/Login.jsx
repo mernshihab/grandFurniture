@@ -51,7 +51,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-[70vh] items-center justify-center py-6">
+    <div className="flex min-h-[70vh] mt-20 items-center justify-center py-6">
       <div className="container">
         <div className="mx-auto rounded-lg bg-base-100 p-6 shadow-lg sm:w-[400px]">
           <img

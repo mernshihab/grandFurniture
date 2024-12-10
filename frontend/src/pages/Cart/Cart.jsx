@@ -65,7 +65,7 @@ export default function Cart() {
   }, [carts, loggedUser, total]);
 
   return (
-    <div className="min-h-[60vh] py-5">
+    <div className="min-h-[60vh] py-5 mt-16">
       <div className="container">
         {carts?.length > 0 ? (
           <>

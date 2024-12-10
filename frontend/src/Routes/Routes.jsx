@@ -13,6 +13,8 @@ import CampaignBanners from "../pages/Admin/EcommerceSetting/CampaignBanners/Cam
 import AddCampaignBanner from "../pages/Admin/EcommerceSetting/CampaignBanners/AddCampaignBanner";
 import EditCampaignBanner from "../pages/Admin/EcommerceSetting/CampaignBanners/EditCampaignBanner";
 import TodaysOrders from "../pages/Admin/Order/TodayOrders";
+import Test from "../pages/Test/Test";
+import ElevateDesk from "../pages/ElevateDesk/ElevateDesk";
 
 // Main pages
 const Cart = React.lazy(() => import("../pages/Cart/Cart"));
@@ -222,6 +224,10 @@ export const routes = createBrowserRouter([
         element: <ContactUs />,
       },
       {
+        path: "/test",
+        element: <Test />,
+      },
+      {
         path: "/shops",
         element: (
           <Suspense fallback={<Spinner />}>
@@ -234,6 +240,14 @@ export const routes = createBrowserRouter([
         element: (
           <Suspense fallback={<Spinner />}>
             <Shop />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/pages/:subCategory",
+        element: (
+          <Suspense fallback={<Spinner />}>
+            <ElevateDesk />
           </Suspense>
         ),
       },

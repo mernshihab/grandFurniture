@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const multer = require("multer");
+const fs = require("fs");
 const {
   addProduct,
   getAllProducts,
@@ -11,9 +12,12 @@ const {
   updateFeatured,
 } = require("../controllers/productController");
 
+// Multer Configuration for File Uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./uploads/products");
+    const uploadDir = "./uploads/products";
+    fs.mkdirSync(uploadDir, { recursive: true });
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
     cb(
@@ -22,20 +26,20 @@ const storage = multer.diskStorage({
     );
   },
 });
-const upload = multer({ storage: storage }).fields([
+
+const upload = multer({ storage }).fields([
   { name: "thumbnail", maxCount: 1 },
-  { name: "gallery" },
+  { name: "variantPhotos", maxCount: 10 },
 ]);
 
+// Routes
 router.post("/add-product", upload, addProduct);
 router.get("/all-products", getAllProducts);
 router.get("/featured-products", getFeaturedProducts);
-
-router.get("/:id", getProductById);
 router.get("/getbyslug/:slug", getProductBySlug);
+router.get("/:id", getProductById);
 router.patch("/update-product/:id", upload, updateProduct);
 router.delete("/delete/:id", deleteProductById);
-
 router.put("/update/feature/:id", updateFeatured);
 
 module.exports = router;

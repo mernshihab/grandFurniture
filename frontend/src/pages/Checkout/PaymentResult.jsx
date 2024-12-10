@@ -8,7 +8,7 @@ export default function PaymentResult() {
   if (isLoading) return <Spinner />;
 
   return (
-    <div className="py-8">
+    <div className="py-8 mt-16">
       <div className="container">
         {data && data?.data?.isPaid ? (
           <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

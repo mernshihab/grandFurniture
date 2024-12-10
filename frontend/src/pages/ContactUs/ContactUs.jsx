@@ -16,7 +16,7 @@ export default function ContactUs() {
   const contact = data?.data[0];
 
   return (
-    <section className="py-5">
+    <section className="py-5 mt-20">
       <h1 className="mb-6 text-center text-xl sm:text-2xl">{contact?.title}</h1>
       <div className="container">
         <div className="flex flex-wrap justify-center gap-4">

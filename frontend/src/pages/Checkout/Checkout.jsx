@@ -210,7 +210,7 @@ export default function Checkout() {
   };
 
   return (
-    <div className="pt-5">
+    <div className="pt-5 mt-16">
       <div className="container">
         <form onSubmit={handelPlaceOrder} className="grid gap-4 lg:grid-cols-3">
           {/* Shipping Details */}

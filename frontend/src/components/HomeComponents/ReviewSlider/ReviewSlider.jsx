@@ -67,7 +67,20 @@ export default function ReviewSlider() {
           navigation={true}
           loop={true}
           spaceBetween={30}
-          slidesPerView={3}
+          breakpoints={{
+            320: {
+              slidesPerView: 1,
+            },
+            480: {
+              slidesPerView: 2,
+            },
+            768: {
+              slidesPerView: 3,
+            },
+            1024: {
+              slidesPerView: 4,
+            },
+          }}
           className="pb-10"
           onSlideChange={handleSlideChange}
         >

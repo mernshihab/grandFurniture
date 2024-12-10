@@ -12,6 +12,7 @@ import { userLogout } from "../../Redux/user/userSlice";
 import SearchBox from "./SearchBox";
 import { BsSearch } from "react-icons/bs";
 import SearchSidebar from "./SearchSidebar/SearchSidebar";
+import { useGetCategoriesQuery } from "../../Redux/category/categoryApi";
 
 export default function MainHeader() {
   const dispatch = useDispatch();
@@ -20,9 +21,24 @@ export default function MainHeader() {
   const carts = useSelector((state) => state.cart.carts);
   const { loggedUser } = useSelector((state) => state.user);
   const { data: logo } = useGetMainLogoQuery();
+  const { data: categoyData } = useGetCategoriesQuery();
   const [searchSidebar, setSearchSidebar] = useState(false);
   const [profileDropdown, setProfileDropdown] = useState(false);
   const [showSearchBox, setShowSearchBox] = useState(false);
+  const [elevatDeskCategory, setElevatDeskCategory] = useState(null);
+
+  const categories = categoyData?.data;
+
+  // map categories and filter which name is Table and in the table category, map subcategories then pick the first one
+  useEffect(() => {
+    if (categoyData?.data) {
+      const categories = categoyData.data;
+      const filteredCategory = categories?.filter(
+        (category) => category?.name === "Table",
+      )[0]?.subCategories[0];
+      setElevatDeskCategory(filteredCategory);
+    }
+  }, [categoyData]);
 
   useEffect(() => {
     window.addEventListener("click", (e) => {
@@ -44,7 +60,7 @@ export default function MainHeader() {
 
   return (
     <header
-      className={`absolute top-0 z-40 w-full bg-black/5 py-2 ${pathname == "/" ? "text-white" : "text-black"}`}
+      className={`absolute top-0 z-40 w-full py-5 ${pathname == "/" ? "text-white" : "text-black"}`}
     >
       <div className="container">
         <div className="flex items-center justify-between gap-2">
@@ -91,30 +107,15 @@ export default function MainHeader() {
                 </NavLink>
                 {/* Dropdown */}
                 <div className="absolute left-0 hidden w-max space-y-2 border-t bg-white text-black shadow-lg group-hover:block">
-                  <NavLink
-                    to="/collection/men"
-                    className="block px-4 py-2 duration-200 hover:bg-gray-200 hover:text-primary"
-                  >
-                    Men
-                  </NavLink>
-                  <NavLink
-                    to="/collection/women"
-                    className="block px-4 py-2 duration-200 hover:bg-gray-200 hover:text-primary"
-                  >
-                    Women
-                  </NavLink>
-                  <NavLink
-                    to="/collection/kids"
-                    className="block px-4 py-2 duration-200 hover:bg-gray-200 hover:text-primary"
-                  >
-                    Kids
-                  </NavLink>
-                  <NavLink
-                    to="/collection/accessories"
-                    className="block px-4 py-2 duration-200 hover:bg-gray-200 hover:text-primary"
-                  >
-                    Accessories
-                  </NavLink>
+                  {categories?.map((category, index) => (
+                    <NavLink
+                      key={index}
+                      to={`/shops/${category?.slug}`}
+                      className="block px-4 py-2 duration-200 hover:bg-gray-200 hover:text-primary"
+                    >
+                      {category?.name}
+                    </NavLink>
+                  ))}
                 </div>
               </li>
 
@@ -128,10 +129,10 @@ export default function MainHeader() {
               </li> */}
               <li>
                 <NavLink
-                  to="/elevating-desk-series"
+                  to={`/pages/${elevatDeskCategory?.slug}`}
                   className="block px-3 duration-200 hover:text-primary"
                 >
-                  Elevating Desk Series
+                  {elevatDeskCategory?.name}
                 </NavLink>
               </li>
               <li>
@@ -170,7 +171,7 @@ export default function MainHeader() {
             </ul>
           </nav>
 
-          <div>
+          <div className="hidden sm:block">
             <button
               onClick={() => setShowSearchBox(false)}
               className={`fixed left-0 top-0 z-10 h-screen w-full bg-black/50 duration-500 ${showSearchBox ? "block" : "hidden"}`}

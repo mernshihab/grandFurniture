@@ -14,59 +14,19 @@ import {
 } from "../../Redux/wishlist/wishlistSlice";
 import Rating from "../../components/Rating/Rating";
 import ProductImage from "./ProductImage";
+import { GoDotFill } from "react-icons/go";
+import { CiDeliveryTruck } from "react-icons/ci";
+import RightSideInfo from "./RightSideInfo";
 
-const test = {
-  _id: "productId123",
-  title: "T-shirt",
-  slug: "t-shirt",
-  category: "categoryId123",
-  variant: [
-    {
-      attribute: "Color",
-      value: [
-        {
-          colorName: "Black",
-          colorCode: "#000",
-          sellingPrice: 2000,
-          image:
-            "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?cs=srgb&dl=pexels-francesco-ungaro-396547.jpg&fm=jpg",
-        },
-        {
-          colorName: "Red",
-          colorCode: "#f00",
-          sellingPrice: 2000,
-          image:
-            "https://media.istockphoto.com/id/493028062/photo/artistic-hand-painted-multi-layered-red-background.jpg?s=612x612&w=0&k=20&c=ZQ2py1sTiLKr4_QvkCLGujMLqkgn4ML-AUVBAVi9wHI=",
-        },
-      ],
-    },
-    {
-      attribute: "Size",
-      value: [
-        {
-          size: ["S", "M", "L"],
-          sellingPrice: 2200,
-          image: "/images/smallTshirt.jpg",
-        },
-        {
-          size: ["XL", "XXL"],
-          sellingPrice: 2500,
-          image: "/images/largeTshirt.jpg",
-        },
-      ],
-    },
-  ],
-};
-
-const vari = test.variant;
-
-export default function ProductInfo({ product }) {
+export default function ProductInfo({ product, parcerDescription }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const carts = useSelector((state) => state.cart.carts);
   const wishlists = useSelector((state) => state.wishlist.wishlists);
 
   const discount = sessionStorage.getItem("discount");
+
+  console.log(product);
 
   const {
     title,
@@ -77,11 +37,21 @@ export default function ProductInfo({ product }) {
     reviewer,
     sellingPrice,
     totalStock,
-    galleries,
     variant,
   } = product;
 
-  const { colors, sizes, variants } = variant || {};
+  const [selectedImage, setSelectedImage] = useState(thumbnail);
+
+  const sizes = variant?.map((item) => item.size);
+  const galleries = variant
+    ?.filter((item) => item.image !== null)
+    .map((item) => item.image);
+
+  const colors = variant?.map((item) => ({
+    image: item.image,
+    color: item.color,
+    colorCode: item.colorCode,
+  }));
 
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
@@ -90,22 +60,6 @@ export default function ProductInfo({ product }) {
   const [selectedSku, setSelectedSku] = useState();
 
   const [selectedQuantity, setSelectedQuantity] = useState(1);
-
-  const handelDecrease = () => {
-    if (selectedQuantity > 1) {
-      setSelectedQuantity(selectedQuantity - 1);
-    } else {
-      toast.error("Minimum quantity is 1");
-    }
-  };
-
-  const handelIncrease = () => {
-    if (selectedStock > selectedQuantity) {
-      setSelectedQuantity(selectedQuantity + 1);
-    } else {
-      toast.error("Maximum quantity reached");
-    }
-  };
 
   const handelSelectSize = (size) => {
     if (selectedSize === size) {
@@ -123,42 +77,12 @@ export default function ProductInfo({ product }) {
     }
   };
 
-  useEffect(() => {
-    let sku = "";
-    let color = "";
-    let size = "";
-
-    if (selectedColor) {
-      color = selectedColor?.label.split(" ").join("");
-    }
-
-    if (selectedSize) {
-      size = selectedSize;
-    }
-
-    if (color && size) {
-      sku = `${color}-${size}`;
-    } else if (color) {
-      sku = `${color}`;
-    } else if (size) {
-      sku = `${size}`;
-    }
-
-    const findVariant = variants?.find((item) => item.sku === sku);
-
-    if (findVariant) {
-      setSelectedSku(findVariant.sku);
-      setSelectedStock(findVariant.stock);
-      setSelectedPrice(findVariant?.sellingPrice);
-    }
-  }, [selectedSize, selectedColor, variants]);
-
   const handleBuyNow = () => {
-    if (variants?.length > 0 && sizes[0] && !selectedSize) {
+    if (variant?.length > 0 && !selectedSize) {
       return Swal.fire("", "Please Select Size", "warning");
     }
 
-    if (variants?.length > 0 && colors[0] && !selectedColor) {
+    if (variant?.length > 0 && !selectedColor) {
       return Swal.fire("", "Please Select Color", "warning");
     }
 
@@ -178,11 +102,11 @@ export default function ProductInfo({ product }) {
   };
 
   const handelAddToCart = () => {
-    if (variants?.length > 0 && sizes[0] && !selectedSize) {
+    if (variant?.length > 0 && !selectedSize) {
       return Swal.fire("", "Please Select Size", "warning");
     }
 
-    if (variants?.length > 0 && colors[0] && !selectedColor) {
+    if (variant?.length > 0 && !selectedColor) {
       return Swal.fire("", "Please Select Color", "warning");
     }
 
@@ -292,18 +216,18 @@ export default function ProductInfo({ product }) {
   const isWishlist = wishlists?.find((item) => item._id === product._id);
 
   return (
-    <div className="grid grid-cols-2 gap-4 lg:gap-6">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-5 lg:gap-6">
       {/* Image */}
-      <div className="">
+      <div className="md:col-span-2">
         <ProductImage
           discount={discount}
           galleries={galleries}
-          thumbnail={thumbnail}
+          thumbnail={selectedImage}
         />
       </div>
 
       {/* Details */}
-      <div className="">
+      <div className="md:col-span-3">
         <div>
           <div className="flex items-center justify-between text-xs text-neutral-content">
             <p className="rounded bg-primary/10 px-2 py-1 text-primary">
@@ -312,11 +236,6 @@ export default function ProductInfo({ product }) {
           </div>
 
           <h1 className="mt-2 text-4xl font-semibold text-neutral">{title}</h1>
-          {selectedStock > 0 ? (
-            <p className="text-xs text-primary">In Stock</p>
-          ) : (
-            <p className="text-xs text-red-500">Out of Stock</p>
-          )}
 
           <div className="mt-2 flex items-center gap-1 text-[13px]">
             <Rating rating={rating || 0} />
@@ -336,12 +255,12 @@ export default function ProductInfo({ product }) {
         </div>
 
         {/* Price */}
-        <div className="mt-3 flex items-center justify-between py-3 pr-2">
+        <div className="mt-3 flex border-b items-center justify-between py-3 pr-2">
           <div className="flex items-center gap-6">
             <p className="text-neutral-content">Price: </p>
 
             <div className="flex items-end gap-2">
-              <p className="text-2xl font-medium text-primary">
+              <p className="text-2xl font-bold">
                 ৳ {parseInt(selectedPrice - (selectedPrice * discount) / 100)}
               </p>
               {discount > 0 && (
@@ -362,48 +281,28 @@ export default function ProductInfo({ product }) {
           </div>
         </div>
 
-        {/* Quantity */}
-        <div className="flex items-center gap-4 border-y py-3">
-          <h3 className="text-neutral-content">Quantity: </h3>
-
-          <div className="flex gap-2">
-            <button
-              onClick={handelDecrease}
-              className="text-2xl duration-200 hover:text-neutral"
-            >
-              <FiMinusCircle />
-            </button>
-            <div>
-              <p className="w-10 text-center font-semibold">
-                {selectedQuantity}
-              </p>
-            </div>
-            <button
-              onClick={handelIncrease}
-              className="text-2xl duration-200 hover:text-neutral"
-            >
-              <FiPlusCircle />
-            </button>
-          </div>
-        </div>
-
         {colors?.length > 0 && (
-          <div className="my-4 flex items-center gap-4">
-            <p>Color :</p>
+          <div className="my-4">
+            <p className="font-semibold text-lg mb-1">Color</p>
 
-            <div className="flex items-center gap-2">
-              {colors?.map((clr) => (
+            <div className=" gap-2">
+              {colors?.map((clr, i) => (
                 <button
-                  key={clr._id}
-                  onClick={() => handelColorSelect(clr)}
+                  key={i}
+                  onClick={() => {
+                    handelColorSelect(clr);
+                    setSelectedImage(clr?.image);
+                  }}
                   className={`scale-[.96] rounded-lg border-2 px-2 py-1 text-sm duration-300 hover:scale-[1]`}
                   style={{
                     borderColor:
-                      clr.value === selectedColor?.value && clr.value,
-                    color: clr.value === selectedColor?.value && clr?.value,
+                      clr.value === selectedColor?.colorCode && clr.colorCode,
+                    color:
+                      clr.colorCode === selectedColor?.colorCode &&
+                      clr?.colorCode,
                   }}
                 >
-                  {clr?.label}
+                  {clr?.color}
                 </button>
               ))}
             </div>
@@ -412,17 +311,17 @@ export default function ProductInfo({ product }) {
 
         {/* Sizes */}
         {sizes?.length > 0 && sizes[0] && (
-          <div className="my-4 flex items-center gap-4">
-            <p>Size :</p>
+          <div className="my-4  gap-4">
+            <p className="font-semibold text-lg mb-1">Size</p>
 
-            <div className="flex items-center gap-2">
+            <div className="">
               {sizes?.map((size) => (
                 <button
                   key={size}
                   onClick={() => handelSelectSize(size)}
                   className={`${
                     size === selectedSize && "bg-primary text-base-100"
-                  } scale-[.96] rounded border px-2.5 py-1.5 text-[15px] duration-300 hover:scale-[1] hover:border-primary`}
+                  } scale-[.96] rounded border px-2.5 my-1.5 py-1.5 text-[15px] duration-300 hover:scale-[1] hover:border-primary`}
                 >
                   {size}
                 </button>
@@ -431,8 +330,27 @@ export default function ProductInfo({ product }) {
           </div>
         )}
 
+        {selectedStock > 0 ? (
+          <p className="flex items-center gap-2 text-lg">
+            {" "}
+            <i>
+              <GoDotFill className="text-lg text-green-500" />
+            </i>{" "}
+            In Stock
+          </p>
+        ) : (
+          <p className="text-lg">Out of Stock</p>
+        )}
+
+        <p className="flex items-center gap-2 text-lg">
+          <i>
+            <CiDeliveryTruck className="text-lg" />
+          </i>
+          Home delivery all over Bangladesh
+        </p>
+
         {/* Buttons */}
-        <div className="mt-6 grid grid-cols-2 items-center gap-2 sm:grid-cols-3">
+        <div className="mb-6 mt-6 grid grid-cols-2 items-center gap-2 sm:grid-cols-2">
           <button
             onClick={handleBuyNow}
             className="flex scale-[.97] items-center justify-center gap-1 rounded bg-primary px-2 py-1.5 text-base-100 duration-300 hover:scale-[1]"
@@ -448,14 +366,12 @@ export default function ProductInfo({ product }) {
             <FaOpencart />
             Add To Cart
           </button>
-
-          <Link
-            to=""
-            className="flex scale-[.97] items-center justify-center gap-1 rounded bg-secondary px-2 py-1.5 text-base-100 duration-300 hover:scale-[1]"
-          >
-            <MdAddCall />
-            Call Now
-          </Link>
+        </div>
+        <div className="mt-3 pl-2 text-sm text-neutral-content">
+          {parcerDescription}
+        </div>
+        <div>
+          <RightSideInfo />
         </div>
       </div>
     </div>

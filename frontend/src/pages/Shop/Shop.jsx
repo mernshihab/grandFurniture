@@ -26,9 +26,9 @@ export default function Shop() {
   let brand = params?.brand ? params?.brand : "";
 
   const [sort, setSort] = useState(0);
-  const STEP = 100;
+  const STEP = 1000;
   const MIN = 0;
-  const MAX = 10000;
+  const MAX = 1000000;
   const [values, setValues] = useState([MIN, MAX]);
 
   const query = {};
@@ -42,12 +42,14 @@ export default function Shop() {
   query["range"] = JSON.stringify(values);
   query["sort"] = sort;
   if (search) query["search"] = search;
+  console.log(query);
   const { data, isLoading, isFetching, isError, error } =
     useGetAllProductsQuery({
       ...query,
     });
 
   let content = null;
+
 
   if (!isLoading && isError) {
     content = <p>{error.error}</p>;
@@ -68,7 +70,7 @@ export default function Shop() {
   }
 
   return (
-    <section className="min-h-[70vh] bg-gray-50 py-5">
+    <section className="min-h-[70vh] bg-gray-50 mt-20 py-5">
       <div className="container">
         <ul className="flex items-center gap-2 text-sm text-neutral-content">
           <li>

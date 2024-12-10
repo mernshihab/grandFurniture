@@ -53,12 +53,12 @@ export default function Clients() {
         Trusted By Top Companies
       </h2>
       <div className="container">
-        <div className="grid grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {clients?.map((client, index) => (
-            <div key={index}>
+            <div className="px-8 md:px-0" key={index}>
               <img
                 // src={`${import.meta.env.VITE_BACKEND_URL}/${client?.logo}`}
-                className="h-20 w-44 object-fill"
+                className="md:h-20 h-12 w-full md:w-44 object-fill"
                 src={client?.logo}
                 alt="client"
               />

@@ -53,7 +53,7 @@ const ChooseByCategory = () => {
           </p>
         </div>
 
-        <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-4">
           {content}
         </div>
       </div>

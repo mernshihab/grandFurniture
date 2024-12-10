@@ -850,7 +850,7 @@ export default function EditProduct() {
                 <FaCartPlus className="sm:hidden" />
               </button>
             </div>
-          </div>
+          </div> 
         </div>
       </div>
     </div>

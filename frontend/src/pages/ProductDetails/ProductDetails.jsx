@@ -4,22 +4,22 @@ import { useParams } from "react-router-dom";
 import { useGetProductBySlugQuery } from "../../Redux/product/productApi";
 import Spinner from "../../components/Spinner/Spinner";
 import ProductInfo from "./ProductInfo";
-import RightSideInfo from "./RightSideInfo";
 import Reviews from "./Review/Reviews";
 import RelatedProducts from "./RelatedProducts/RelatedProducts";
 import usePageView from "../../hooks/usePageView";
 
 export default function ProductDetails() {
+  window.scroll(0, 0);
   usePageView("Product Details");
   const params = useParams();
 
-  const [tab, setTab] = useState("description");
+  const [tab, setTab] = useState("reviews");
   let slug = params?.id;
 
   const { data, isLoading } = useGetProductBySlugQuery(slug);
 
   useEffect(() => {
-    window.scroll(0, 0);
+  
 
     // set meta description
     const meta = document.createElement("meta");
@@ -82,23 +82,18 @@ export default function ProductDetails() {
   if (!isLoading) {
     content = (
       <div>
-        <div className="mt-4 overflow-hidden lg:flex">
+        <div className="mt-4 overflow-hidden">
           <div className="text-neutral">
-            <ProductInfo product={data?.data} />
+            <ProductInfo
+              product={data?.data}
+              parcerDescription={parcerDescription}
+            />
           </div>
         </div>
 
         {/* Details */}
         <div className="mt-6">
           <div className="flex items-center gap-6 border-b">
-            <button
-              onClick={() => setTab("description")}
-              className={`${
-                tab === "description" && "border-b border-primary"
-              } pb-2`}
-            >
-              Description
-            </button>
             <button
               onClick={() => setTab("reviews")}
               className={`${
@@ -109,14 +104,7 @@ export default function ProductDetails() {
             </button>
           </div>
 
-          <div>
-            {tab === "description" && (
-              <div className="mt-3 pl-2 text-sm text-neutral-content">
-                {parcerDescription}
-              </div>
-            )}
-            {tab === "reviews" && <Reviews product={data?.data} />}
-          </div>
+          <div>{tab === "reviews" && <Reviews product={data?.data} />}</div>
         </div>
 
         <RelatedProducts category={data?.data?.category} />
@@ -125,7 +113,7 @@ export default function ProductDetails() {
   }
 
   return (
-    <section className="pb-8 mt-24">
+    <section className="mt-24 pb-8">
       <div className="container">{content}</div>
     </section>
   );

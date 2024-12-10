@@ -3,9 +3,11 @@ import { useGetFeaturedProductsQuery } from "../../../Redux/product/productApi";
 import ProductCard from "../../ProductCard/ProductCard";
 import ProductCards from "../../Skeleton/ProductCards/ProductCards";
 import { FaLongArrowAltRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export default function FeaturedProducts() {
   const [filter, setFilter] = useState("Chair");
+  const [searchParams, setSearchParams] = useState("chair");
 
   const { data, isLoading, isError, error } = useGetFeaturedProductsQuery({
     limit: 100,
@@ -46,7 +48,10 @@ export default function FeaturedProducts() {
             className={`px-4 py-2 text-2xl font-bold ${
               filter === "Chair" && "border-b-[1px] border-black"
             }`}
-            onClick={() => setFilter("Chair")}
+            onClick={() => {
+              setFilter("Chair");
+              setSearchParams("chair");
+            }}
           >
             Chair
           </button>
@@ -54,7 +59,10 @@ export default function FeaturedProducts() {
             className={`px-4 py-2 text-2xl font-bold ${
               filter === "Table" && "border-b-[1px] border-black"
             }`}
-            onClick={() => setFilter("Table")}
+            onClick={() => {
+              setFilter("Table");
+              setSearchParams("table");
+            }}
           >
             Table
           </button>
@@ -64,17 +72,15 @@ export default function FeaturedProducts() {
           {content}
         </div>
         <div className="flex justify-center py-5">
-          {/* <button className="group relative flex items-center gap-3 overflow-hidden bg-black px-4 py-2 text-white duration-300">
-            View All
-            <FaLongArrowAltRight className="translate-x-[-10px] text-white opacity-0 transition-all text-xl duration-300 ease-in-out group-hover:translate-x-0 group-hover:opacity-100" />
-          </button> */}
-
-          <button className="f_btn flex items-center gap-2 bg-black px-4 py-2 text-white">
+          <Link
+            to={`/shops/${searchParams}`}
+            className="f_btn flex items-center gap-2 bg-black px-4 py-2 font-semibold text-white"
+          >
             View All
             <i>
-              <FaLongArrowAltRight />
+              <FaLongArrowAltRight className="text-xl" />
             </i>
-          </button>
+          </Link>
         </div>
       </div>
     </div>

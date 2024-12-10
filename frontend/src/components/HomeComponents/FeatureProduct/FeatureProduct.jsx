@@ -1,17 +1,24 @@
+import { FaLongArrowAltRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 export default function FeatureProduct() {
   return (
     <section className="py-10">
       <div className="container">
-        <div className="grid grid-cols-2">
+        <div className="grid md:grid-cols-2">
           <div className="flex justify-end">
-            <img src="/images/featureChair.webp" className="w-[95%]" alt="featureChair" />
+            <img
+              src="/images/featureChair.webp"
+              className="w-[95%]"
+              alt="featureChair"
+            />
           </div>
-          <div className="flex justify-center items-center">
-            <div className="w-[62%]">
-              <h1 className="font-bold text-4xl">We Create Meaningful Design</h1>
-              <p className="mt-4 mb-5 text-neutral">
+          <div className="flex items-center justify-center">
+            <div className="md:w-[62%] mt-5 md:mt-0 w-[85%]">
+              <h1 className="text-4xl font-bold">
+                We Create Meaningful Design
+              </h1>
+              <p className="mb-5 mt-4 text-neutral">
                 GRID ensures you 100% authenticity and originality of the
                 products which are imported via China, Vietnam & Taiwan. We
                 never want you to compromise with the quality that is why we
@@ -25,7 +32,14 @@ export default function FeatureProduct() {
                 products are made of strong materials imported from China which
                 ensure 100% durability.
               </p>
-              <Link className="py-3 px-4 text-white bg-black font-bold" to="/">Shop Now</Link>
+              <div className="flex py-5">
+                <Link to={"/shops/chair"} className="f_btn flex items-center gap-2 bg-black px-4 py-2 font-semibold text-white">
+                  Shop Now
+                  <i>
+                    <FaLongArrowAltRight className="text-xl" />
+                  </i>
+                </Link>
+              </div>
             </div>
           </div>
         </div>

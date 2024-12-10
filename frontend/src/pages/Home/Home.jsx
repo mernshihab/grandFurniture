@@ -1,7 +1,7 @@
 import CampaignBanner from "../../components/HomeComponents/Campaign/CampaignBanner/CampaignBanner";
 import ShopBannerCom from "../../components/HomeComponents/Campaign/ShopBannerCom/ShopBannerCom";
 import CategoryWaysProducts from "../../components/HomeComponents/CategoryWaysProducts/CategoryWaysProducts";
-import ChooseByBrand from "../../components/HomeComponents/ChooseByBrand/ChooseByBrand";
+// import ChooseByBrand from "../../components/HomeComponents/ChooseByBrand/ChooseByBrand";
 import ChooseByCategory from "../../components/HomeComponents/ChooseByCategory/ChooseByCategory";
 import Clients from "../../components/HomeComponents/Clients/Clients";
 import FeaturedProducts from "../../components/HomeComponents/FeaturedProducts/FeaturedProducts";
@@ -33,7 +33,7 @@ export default function Home() {
       <Clients />
       <FeatureProduct/>
       <CampaignBanner />
-      <ChooseByBrand />
+      {/* <ChooseByBrand /> */}
       <PopularProducts />
       <CategoryWaysProducts />
     </>

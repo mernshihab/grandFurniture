@@ -8,94 +8,74 @@ const fs = require("fs");
 const { calculatePagination } = require("../utils/calculatePagination");
 const { pick } = require("../utils/pick");
 
+// Helper function to delete a file
+const deleteFile = (filePath) => {
+  fs.unlink(filePath, (err) => {
+    if (err) console.error(`Error deleting file: ${filePath}`, err);
+  });
+};
+
 exports.addProduct = async (req, res) => {
-  const thumbnail = req?.files?.thumbnail[0]?.filename;
-  const galleries = req.files.gallery ? req.files.gallery : [];
+  const thumbnail = req?.files?.thumbnail?.[0]?.filename;
+  const variantPhotos = req?.files?.variantPhotos || [];
 
   if (!thumbnail) {
-    return res.json({
+    return res.status(400).json({
       success: false,
-      message: "Please upload thumbnail",
+      message: "Please upload a thumbnail",
     });
   }
 
-  if (galleries?.length > 10) {
-    galleries?.forEach((gallery) => {
-      fs.unlink(`./uploads/products/${gallery?.filename}`, (err) => {
-        if (err) console.error(err);
-      });
-    });
-
-    // delete thumbnail image
-    fs.unlink(`./uploads/products/${thumbnail}`, (err) => {
-      if (err) console.error(err);
-    });
-
-    return res.json({
-      success: false,
-      message: "You can't upload more than 10 images",
-    });
-  }
-
-  const { title, variant } = req?.body;
+  const { title } = req.body;
 
   let product = {
-    ...req?.body,
-    slug: slugify(`${title}-${Date.now()}`),
+    ...req.body,
+    slug: slugify(`${title}-${Date.now()}`), // Correct template literal
     thumbnail,
   };
 
-  if (variant) {
-    product.variant = JSON.parse(variant); // Ensure variant is parsed
-  }
+  const variants = JSON.parse(req.body.variants);
 
-  if (galleries?.length > 0) {
-    product.galleries = galleries.map((gallery) => ({
-      url: gallery.filename,
-      name: gallery.originalname,
-    }));
+  if (variants && variants?.length > 0) {
+    try {
+      const newVariants = variants?.map((variantItem, index) => {
+        return {
+          ...variantItem,
+          image: variantPhotos[index]?.filename || null,
+        };
+      });
+
+      product.variant = newVariants;
+    } catch (error) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid variant JSON",
+        error,
+      });
+    }
   }
 
   try {
     const result = await Product.create(product);
-    res.status(200).json({
+    return res.status(201).json({
       success: true,
       message: "Product added successfully",
       data: result,
     });
   } catch (error) {
-    res.json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
-
-    // Delete uploaded images if error occurs
-    fs.unlink(`./uploads/products/${thumbnail}`, (err) => {
-      if (err) console.error(err);
-    });
-
-    if (galleries?.length > 0) {
-      galleries.forEach((gallery) => {
-        fs.unlink(`./uploads/products/${gallery?.filename}`, (err) => {
-          if (err) console.error(err);
-        });
-      });
-    }
   }
 };
 
+// Get All Products
 exports.getAllProducts = async (req, res) => {
   const paginationOptions = pick(req.query, ["page", "limit"]);
   const { page, limit, skip } = calculatePagination(paginationOptions);
-  const {
-    category,
-    subCategory,
-    subSubCategory,
-    brand,
-    range,
-    sort: priceSort,
-    search,
-  } = req.query;
+  const { category, subCategory, subSubCategory, brand, range, sort, search } =
+    req.query;
 
   try {
     const targetedCategory = await Categories.findOne({
@@ -122,15 +102,14 @@ exports.getAllProducts = async (req, res) => {
     if (subSubCategory) query.subSubCategory = subSubategoryId;
     if (brand) query.brand = brandName;
 
-    const prices = range && JSON.parse(range);
     let sortOption = {};
 
-    if (priceSort && parseInt(priceSort) !== 0) {
-      sortOption.sellingPrice = parseInt(priceSort);
+    if (sort && parseInt(sort) !== 0) {
+      sortOption.sellingPrice = parseInt(sort);
     } else {
       sortOption.createdAt = -1;
     }
-
+    const prices = range && JSON.parse(range);
     if (range) query.sellingPrice = { $gte: prices[0], $lte: prices[1] };
 
     if (search) {
@@ -165,422 +144,212 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
+// Get a Product by ID
 exports.getProductById = async (req, res) => {
   try {
-    const result = await Product.findById(req?.params?.id).populate(
-      "category subCategory subSubCategory"
+    const product = await Product.findById(req.params.id).populate(
+      "category subCategory subSubCategory",
+      "name slug icon"
     );
-
-    if (!result) {
-      return res.json({
-        success: false,
-        message: "Product not found",
-      });
-    }
+    if (!product)
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
 
     res.status(200).json({
       success: true,
-      message: "Product",
-      data: result,
+      message: "Product fetched successfully",
+      data: product,
     });
   } catch (error) {
-    res.json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
+// Get a Product by Slug
 exports.getProductBySlug = async (req, res) => {
   try {
-    const result = await Product.findOne({ slug: req?.params?.slug }).populate(
+    const product = await Product.findOne({ slug: req.params.slug }).populate(
       "category subCategory subSubCategory",
       "name slug icon"
     );
 
-    if (!result) {
-      return res.json({
+    if (!product) {
+      return res.status(404).json({
         success: false,
         message: "Product not found",
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Product",
-      data: result,
+      message: "Product fetched successfully",
+      data: product,
     });
   } catch (error) {
-    res.json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
 
+// Delete a Product by ID
 exports.deleteProductById = async (req, res) => {
   try {
-    const id = req?.params?.id;
+    const product = await Product.findById(req.params.id);
+    if (!product)
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
 
-    const product = await Product.findById(id);
-    if (!product) {
-      return res.json({
-        success: false,
-        message: "Product not found",
-      });
-    }
+    await Product.findByIdAndDelete(req.params.id);
 
-    const result = await Product.findByIdAndDelete(id);
+    res
+      .status(200)
+      .json({ success: true, message: "Product deleted successfully" });
 
-    if (!result) {
-      return res.json({
-        success: false,
-        message: "Product delete failed",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      message: "Product deleted successfully",
-    });
-
-    // delete thumbnail image
-    const thumbnail = product?.thumbnail;
-    const fullPath = `./uploads/products/${thumbnail}`;
-    fs.unlink(fullPath, (err) => {
-      if (err) console.error(err);
-    });
-
-    if (product?.galleries?.length > 0) {
-      product?.galleries?.forEach((gallery) => {
-        fs.unlink(`./uploads/products/${gallery?.url}`, (err) => {
-          if (err) console.error(err);
-        });
-      });
-    }
-  } catch (error) {
-    res.json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
-exports.updateProduct = async (req, res) => {
-  const id = req?.params?.id;
-  const thumbnail = req?.files?.thumbnail && req?.files?.thumbnail[0]?.filename;
-  const galleries = req.files.gallery ? req.files.gallery : [];
-
-  const { title, variant, galleriesUrl } = req?.body;
-
-  try {
-    const isExit = await Product.findById(id);
-
-    if (!isExit) {
-      return res.json({
-        success: false,
-        message: "Product not found",
-      });
-    }
-
-    let updatedProduct = {
-      ...req?.body,
-      slug: slugify(`${title}-${Date.now()}`),
-      thumbnail: thumbnail || isExit?.thumbnail,
-    };
-
-    if (variant) {
-      updatedProduct.variant = JSON.parse(variant); // Update variant
-    } else {
-      updatedProduct.variant = isExit.variant; // Keep existing variant if not provided
-    }
-
-    let newImages = [];
-    if (galleries?.length > 0) {
-      const newGalleryImages = galleries.map((gallery) => ({
-        url: gallery.filename,
-        name: gallery.originalname,
-      }));
-      newImages.push(...newGalleryImages);
-    }
-
-    if (isExit?.galleries) {
-      const filteredImages = isExit.galleries.filter((gallery) =>
-        galleriesUrl?.includes(gallery?.url)
-      );
-      newImages = [...filteredImages, ...newImages];
-    }
-
-    updatedProduct.galleries = newImages; // Update galleries
-
-    if (newImages?.length > 10) {
-      if (galleries?.length > 0) {
-        galleries?.forEach((gallery) => {
-          fs.unlink(`./uploads/products/${gallery?.filename}`, (err) => {
-            if (err) console.error(err);
-          });
-        });
-      }
-
-      return res.json({
-        success: false,
-        message: "You can't upload more than 10 images",
-      });
-    }
-
-    // Update product
-    const result = await Product.findByIdAndUpdate(id, updatedProduct, { new: true });
-
-    if (!result) {
-      return res.json({
-        success: false,
-        message: "Product update failed",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      message: "Product updated successfully",
-      data: result,
-    });
-
-    // Delete old image files if updated
-    if (thumbnail && isExit.thumbnail !== thumbnail) {
-      fs.unlink(`./uploads/products/${isExit.thumbnail}`, (err) => {
-        if (err) console.error(err);
-      });
-    }
-
-    isExit.galleries.forEach((gallery) => {
-      if (!updatedProduct.galleries?.some((img) => img.url === gallery.url)) {
-        fs.unlink(`./uploads/products/${gallery.url}`, (err) => {
-          if (err) console.error(err);
-        });
-      }
-    });
-  } catch (error) {
-    res.json({
-      success: false,
-      message: error.message,
-    });
-
-    // Delete uploaded images in case of error
-    if (thumbnail) {
-      fs.unlink(`./uploads/products/${thumbnail}`, (err) => {
-        if (err) console.error(err);
-      });
-    }
-
-    galleries?.forEach((gallery) => {
-      fs.unlink(`./uploads/products/${gallery?.filename}`, (err) => {
-        if (err) console.error(err);
-      });
-    });
-  }
-};
-
-exports.updateFeatured = async (req, res) => {
-  try {
-    const id = req?.params?.id;
-    const product = await Product.findById(id);
-    if (!product) {
-      return res.json({
-        success: false,
-        message: "Product not found",
-      });
-    }
-
-    await Product.findByIdAndUpdate(id, { featured: !product.featured });
-
-    res.status(200).json({
-      success: true,
-      message: `Product ${product.featured ? "unfeatured" : "featured"} successfully`,
-    });
-  } catch (error) {
-    res.json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
-
-// 
-
-
-exports.updateProduct = async (req, res) => {
-  const id = req?.params?.id;
-  const thumbnail = req?.files?.thumbnail && req?.files?.thumbnail[0]?.filename;
-  const galleries = req.files.gallery ? req.files.gallery : [];
-
-  const { title, variant, galleriesUrl } = req?.body;
-
-  try {
-    const isExit = await Product.findById(id);
-
-    if (!isExit) {
-      return res.json({
-        success: false,
-        message: "Product not found",
-      });
-    }
-
-    let product = {
-      ...req?.body,
-      slug: slugify(`${title}-${Date.now()}`),
-      thumbnail: thumbnail || isExit?.thumbnail,
-    };
-
-    if (variant) {
-      product.variant = JSON.parse(variant);
-    }
-
-    let newImages = [];
-
-    if (galleries?.length > 0) {
-      const newImage = galleries?.map((gallery) => ({
-        url: gallery.filename,
-        name: gallery.originalname,
-      }));
-
-      newImages.push(...newImages, ...newImage);
-    }
-
-    if (isExit?.galleries) {
-      const filterImages = isExit?.galleries?.filter((gallery) =>
-        galleriesUrl?.includes(gallery?.url)
-      );
-
-      newImages = [...filterImages, ...newImages];
-    }
-
-    product.galleries = newImages;
-
-    if (newImages?.length > 10) {
-      if (galleries?.length > 0) {
-        galleries?.forEach((gallery) => {
-          fs.unlink(`./uploads/products/${gallery?.filename}`, (err) => {
-            if (err) {
-              console.error(err);
-            }
-          });
-        });
-      }
-
-      return res.json({
-        success: false,
-        message: "You can't upload more than 10 images",
-      });
-    }
-
-    // update
-    const result = await Product.findByIdAndUpdate(id, product, { new: true });
-
-    if (!result) {
-      return res.json({
-        success: false,
-        message: "Product update failed",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      message: "Product updated successfully",
-    });
-
-    if (galleriesUrl && isExit?.galleries) {
-      const deletedImages = isExit?.galleries?.filter(
-        (gallery) => !galleriesUrl?.includes(gallery?.url)
-      );
-
-      deletedImages?.forEach((image) => {
-        fs.unlink(`./uploads/products/${image?.url}`, (err) => {
-          if (err) {
-            console.error(err);
-          }
-        });
-      });
-    }
-
-    if (!galleriesUrl && isExit?.galleries?.length > 0) {
-      isExit?.galleries?.forEach((image) => {
-        fs.unlink(`./uploads/products/${image?.url}`, (err) => {
-          if (err) {
-            console.error(err);
-          }
-        });
-      });
-    }
-
-    // delete previous thumbnail image
-    if (thumbnail) {
-      const fullPath = `./uploads/products/${isExit?.thumbnail}`;
-      fs.unlink(fullPath, (err) => {
-        if (err) {
-          console.error(err);
+    deleteFile(`./uploads/products/${product?.thumbnail}`);
+    if (product?.variant) {
+      product?.variant?.map((v) => {
+        if (v?.image) {
+          deleteFile(`./uploads/products/${v?.image}`);
         }
       });
     }
   } catch (error) {
-    res.json({
-      success: false,
-      message: error.message,
-    });
-
-    if (thumbnail) {
-      fs.unlink(`./uploads/products/${thumbnail}`, (err) => {
-        if (err) {
-          console.error(err);
-        }
-      });
-    }
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// get Flash products
+// Update a Product
+exports.updateProduct = async (req, res) => {
+  const { id } = req.params; // Get the product ID from the URL params
+  const thumbnail = req?.files?.thumbnail?.[0]?.filename;
+  const variantPhotos = req?.files?.variantPhotos || [];
+
+  try {
+    // Fetch the existing product from the database
+    const existingProduct = await Product.findById(id);
+
+    if (!existingProduct) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    const { title, variants } = req.body;
+
+    // Prepare the product update data by copying the existing product
+    const productUpdateData = { ...existingProduct.toObject() };
+
+    // Update thumbnail if provided, else keep existing
+    if (thumbnail) {
+      productUpdateData.thumbnail = thumbnail;
+    }
+
+    // Update title and slug if the title has changed
+    if (title && title !== existingProduct.title) {
+      productUpdateData.title = title;
+      productUpdateData.slug = slugify(`${title}-${Date.now()}`);
+    }
+
+    // Process variants if provided
+    if (variants) {
+      try {
+        const parsedVariants = JSON.parse(variants);
+
+        if (parsedVariants && parsedVariants.length > 0) {
+          const updatedVariants = parsedVariants.map((variantItem, index) => {
+            return {
+              ...variantItem,
+              image:
+                variantPhotos[index]?.filename ||
+                existingProduct.variant[index]?.image,
+            };
+          });
+
+          productUpdateData.variant = updatedVariants;
+        }
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid variant JSON",
+          error,
+        });
+      }
+    }
+
+    // Update the product in the database
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      productUpdateData,
+      {
+        new: true, // Return the updated document
+        runValidators: true, // Ensure the updated data is valid
+      }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Product updated successfully",
+      data: updatedProduct,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Get Featured Products
 exports.getFeaturedProducts = async (req, res) => {
   try {
+    const limit = parseInt(req.query.limit, 10) || 10;
+
     const products = await Product.find({ featured: true })
-      .limit(req.query.limit)
+      .limit(limit)
       .sort({ createdAt: -1 })
       .populate("category subCategory subSubCategory", "name slug icon");
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Featured Products fetched successfully",
+      message: "Featured products fetched successfully",
       data: products,
     });
   } catch (error) {
-    res.json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
 
+// Update Featured Status
 exports.updateFeatured = async (req, res) => {
   const { id } = req.params;
 
   try {
     const product = await Product.findById(id);
+    if (!product)
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
 
-    if (!product) {
-      return res.json({
-        success: false,
-        message: "Product not found",
-      });
-    }
-
-    await Product.findByIdAndUpdate(id, { featured: !product.featured });
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      { featured: !product.featured },
+      { new: true }
+    );
 
     res.status(200).json({
       success: true,
-      message: "Product updated successfully",
+      message: "Featured status updated successfully",
+      data: updatedProduct,
     });
   } catch (error) {
-    res.son({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };

@@ -19,7 +19,7 @@ export default function ProductCard({ product, discount: flashDiscount = 0 }) {
               <img
                 src={`${import.meta.env.VITE_BACKEND_URL}/products/${thumbnail}`}
                 alt={title}
-                className="product_img h-full w-full object-cover"
+                className="product_img h-[90%] md:h-full w-full object-cover"
                 loading="lazy"
               />
 

@@ -6,9 +6,18 @@ import { Helmet } from "react-helmet";
 import { useGetFaviconQuery } from "./Redux/favicon/faviconApi";
 import { useGetSEOQuery } from "./Redux/seoApi";
 import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 export default function App() {
   const authChecked = useAuthCheck();
+
+  useEffect(() => {
+    AOS.init({
+      duration: 600,
+      once: false,
+    });
+  }, []);
 
   const { data: favicon } = useGetFaviconQuery();
   const icon = favicon?.data[0]?.icon;
