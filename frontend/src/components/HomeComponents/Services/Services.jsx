@@ -6,7 +6,7 @@ const Services = () => {
   return (
     <div className="md:py-20 py-8 bg-white">
       <div className="container mx-auto">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
+        <div data-aos="fade-up" className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
           {/* Free Delivery */}
           <div className="flex flex-col items-center">
             <TbTruckDelivery className="text-6xl text-black mb-4" />

@@ -137,7 +137,7 @@ export default function MainHeader() {
               </li>
               <li>
                 <NavLink
-                  to="/grid-line-items"
+                  to="/shops/grid-line-items"
                   className="block px-3 duration-200 hover:text-primary"
                 >
                   Line Collection

@@ -15,6 +15,8 @@ import EditCampaignBanner from "../pages/Admin/EcommerceSetting/CampaignBanners/
 import TodaysOrders from "../pages/Admin/Order/TodayOrders";
 import Test from "../pages/Test/Test";
 import ElevateDesk from "../pages/ElevateDesk/ElevateDesk";
+import AllClients from "../pages/Admin/Clients/AllClients";
+import AddClient from "../pages/Admin/Clients/AddClient";
 
 // Main pages
 const Cart = React.lazy(() => import("../pages/Cart/Cart"));
@@ -479,6 +481,14 @@ export const routes = createBrowserRouter([
       {
         path: "/admin/order/:id",
         element: <OrderDetails />,
+      },
+      {
+        path: "/admin/client/all-client",
+        element: <AllClients/>,
+      },
+      {
+        path: "/admin/client/add-client",
+        element: <AddClient/>,
       },
       {
         path: "/admin/customer/all-customers",

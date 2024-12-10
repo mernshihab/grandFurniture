@@ -48,10 +48,10 @@ const adminSidebarItems = [
         title: "Brand",
         path: "/admin/brands",
       },
-      {
-        title: "Color",
-        path: "/admin/colors",
-      },
+      // {
+      //   title: "Color",
+      //   path: "/admin/colors",
+      // },
       {
         title: "Product",
         subSubMenu: [
@@ -68,6 +68,34 @@ const adminSidebarItems = [
     ],
   },
 
+  {
+    icon: <BiSolidShoppingBags />,
+    title: "Orders",
+    subMenu: [
+      {
+        title: "All Orders",
+        path: "/admin/order/all-orders",
+      },
+      {
+        title: "Today's Orders",
+        path: "/admin/order/todays-orders",
+      },
+    ],
+  },
+  {
+    icon: <BiSolidShoppingBags />,
+    title: "Clients",
+    subMenu: [
+      {
+        title: "All Clients",
+        path: "/admin/client/all-client",
+      },
+      {
+        title: "Add Client",
+        path: "/admin/client/add-client",
+      },
+    ],
+  },
   {
     icon: <BiSolidShoppingBags />,
     title: "Orders",
