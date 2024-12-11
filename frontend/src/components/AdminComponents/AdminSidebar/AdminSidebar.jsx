@@ -149,6 +149,20 @@ const adminSidebarItems = [
     ],
   },
   {
+    icon: <BiSolidShoppingBags />,
+    title: "Featured Products",
+    subMenu: [
+      {
+        title: "All Featured Products",
+        path: "/admin/featured",
+      },
+      {
+        title: "Add Featured Product",
+        path: "/admin/featured/add",
+      },
+    ],
+  },
+  {
     icon: <MdOutlineSettings />,
     title: "E-commerce Setting",
     subMenu: [

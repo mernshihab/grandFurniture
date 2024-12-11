@@ -36,6 +36,8 @@ const businessInfoRoutes = require("./businessInfoRoutes");
 const orderRouter = require("./orderRoutes");
 const paymentRouter = require("./paymentRoute");
 
+const featureProjectRoutes = require("./featureProjectRoutes");
+
 //------------------------------------------------------------------------------
 // use Routes
 //------------------------------------------------------------------------------
@@ -62,6 +64,7 @@ router.use("/flash-deal", flashDealRouter);
 router.use("/review", reviewRouter);
 router.use("/topCampaignBanner", topCampaignBannerRouter);
 router.use("/campaignBanner", campaignBanner);
+router.use("/featureProject", featureProjectRoutes);
 
 router.use("/coupon", couponRouter);
 router.use("/seo", seoRouter);

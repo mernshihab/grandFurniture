@@ -21,12 +21,23 @@ const upload = multer({ storage: storage });
 router.patch(
   "/update-about/:id",
   verifyAdmin,
-  upload.single("image"),
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "featureProductImages", maxCount: 10 },
+  ]),
   updateAboutUs
 );
 
 router.get("/", getAboutUs);
 
-router.post("/add-about", verifyAdmin, upload.single("image"), createAboutUs);
+router.post(
+  "/add-about",
+  verifyAdmin,
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "featureProductImages", maxCount: 10 },
+  ]),
+  createAboutUs
+);
 
 module.exports = router;

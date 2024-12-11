@@ -13,6 +13,7 @@ import SearchBox from "./SearchBox";
 import { BsSearch } from "react-icons/bs";
 import SearchSidebar from "./SearchSidebar/SearchSidebar";
 import { useGetCategoriesQuery } from "../../Redux/category/categoryApi";
+import { useGetContactQuery } from "../../Redux/contact/contactApi";
 
 export default function MainHeader() {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ export default function MainHeader() {
   const { loggedUser } = useSelector((state) => state.user);
   const { data: logo } = useGetMainLogoQuery();
   const { data: categoyData } = useGetCategoriesQuery();
+  const { data: contact } = useGetContactQuery();
   const [searchSidebar, setSearchSidebar] = useState(false);
   const [profileDropdown, setProfileDropdown] = useState(false);
   const [showSearchBox, setShowSearchBox] = useState(false);
@@ -29,7 +31,10 @@ export default function MainHeader() {
 
   const categories = categoyData?.data;
 
-  // map categories and filter which name is Table and in the table category, map subcategories then pick the first one
+  const youtubeSocial = contact?.data[0]?.socials?.find(
+    (social) => social?.icon === "FaYoutube",
+  );
+
   useEffect(() => {
     if (categoyData?.data) {
       const categories = categoyData.data;
@@ -145,7 +150,7 @@ export default function MainHeader() {
               </li>
               <li>
                 <NavLink
-                  to="https://www.youtube.com/@eManagerit"
+                  to={youtubeSocial?.url}
                   target="_blank"
                   className="block px-3 duration-200 hover:text-primary"
                 >

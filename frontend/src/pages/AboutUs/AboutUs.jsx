@@ -9,7 +9,7 @@ export default function AboutUs() {
   const { data, isLoading } = useGetAboutQuery();
   const about = data?.data[0];
   const parcerDescription = about?.description && parcer(about?.description);
-  console.log(about);
+  console.log("About", about);
 
   if (isLoading) {
     return <Spinner />;
@@ -17,7 +17,7 @@ export default function AboutUs() {
 
   return (
     <section className="mt-16 py-5">
-      <div className="relative flex h-[40vh] lg:h-screen w-full items-center justify-center">
+      <div className="relative flex h-[40vh] w-full items-center justify-center lg:h-screen">
         <img
           src={`${import.meta.env.VITE_BACKEND_URL}/aboutus/${about?.image}`}
           alt="About Photo"
@@ -31,45 +31,24 @@ export default function AboutUs() {
       </div>
       <div className="container py-10">
         <div className="mx-auto w-[80%]">{parcerDescription}</div>
-        <div className="mt-5 grid md:grid-cols-2 gap-6">
-          <div className="text-center">
-            <div>
-              <img
-                src="/images/about/about.webp"
-                className="h-full w-full"
-                alt="about"
-              />
+        <div className="mt-5 grid gap-6 md:grid-cols-2">
+          {about?.featureProduct?.map((product, i) => (
+            <div key={i} className="text-center">
+              <div>
+                <img
+                  src={`${import.meta.env.VITE_BACKEND_URL}/aboutus/${product?.image}`}
+                  className="h-full w-full"
+                  alt="about"
+                />
+              </div>
+              <h3 className="mt-4 px-2 text-3xl font-bold">
+                {product?.title}
+              </h3>
+              <p className="mt-4 px-2.5">
+                {product?.description}
+              </p>
             </div>
-            <h3 className="mt-4 px-2 text-3xl font-bold">
-              Design your corporate environment with GRID!
-            </h3>
-            <p className="mt-4 px-2.5">
-              GRID gives your office an elegant look and makes your corporate
-              environment enjoyable. While working at an office, your
-              surroundings matter the most. We ensure you a comfortable and
-              premium quality via our products that would make your work
-              environment energetic!
-            </p>
-          </div>
-          <div className="text-center">
-            <div>
-              <img
-                src="/images/about/about2.webp"
-                className="h-full w-full"
-                alt="about"
-              />
-            </div>
-            <h3 className="mt-4 px-2 text-3xl font-bold">
-              Meaningful & Minimal Design For Your Home.
-            </h3>
-            <p className="mt-4 px-2.5">
-              We create designs which bring a spark to your office or home. If
-              you take a look at our designs, each design has a story to share!
-              Our breathable mesh material provides an optimal air flow to avoid
-              sweating and sticking, keep air circulation for extra comfy, and
-              the mesh office chair resists abrasion and transformation.
-            </p>
-          </div>
+          ))}
         </div>
       </div>
     </section>

@@ -17,6 +17,9 @@ import Test from "../pages/Test/Test";
 import ElevateDesk from "../pages/ElevateDesk/ElevateDesk";
 import AllClients from "../pages/Admin/Clients/AllClients";
 import AddClient from "../pages/Admin/Clients/AddClient";
+import FeaturesProjectList from "../pages/Admin/FeaturesProject/FeaturesProjectList";
+import AddFeaturesProject from "../pages/Admin/FeaturesProject/AddFeaturesProject";
+import EditFeaturesProject from "../pages/Admin/FeaturesProject/EditFeaturesProject";
 
 // Main pages
 const Cart = React.lazy(() => import("../pages/Cart/Cart"));
@@ -493,6 +496,18 @@ export const routes = createBrowserRouter([
       {
         path: "/admin/customer/all-customers",
         element: <AllUsers />,
+      },
+      {
+        path: "/admin/featured",
+        element: <FeaturesProjectList/>,
+      },
+      {
+        path: "/admin/featured/add",
+        element: <AddFeaturesProject/>,
+      },
+      {
+        path: "/admin/featured/edit/:id",
+        element: <EditFeaturesProject/>,
       },
 
       //--------------Flash Deal

@@ -2,12 +2,30 @@ const fs = require("fs");
 const AboutUs = require("../models/aboutModel");
 
 exports.createAboutUs = async (req, res) => {
-  const image = req?.file?.filename;
+  const image = req?.files?.image?.[0]?.filename; // Main image
+  const featureProductImages = req?.files?.featureProductImages || [];
   const data = req?.body;
+
+  let featureProduct = [];
+  if (data.featureProduct) {
+    try {
+      featureProduct = JSON.parse(data.featureProduct); // Parse the featureProduct string
+      featureProduct = featureProduct.map((product, index) => ({
+        ...product,
+        image: featureProductImages[index]?.filename || product.image || "",
+      }));
+    } catch (err) {
+      return res.json({
+        success: false,
+        message: "Invalid featureProduct format",
+      });
+    }
+  }
 
   const aboutUs = {
     ...data,
     image,
+    featureProduct,
   };
 
   try {
@@ -52,8 +70,25 @@ exports.getAboutUs = async (req, res) => {
 
 exports.updateAboutUs = async (req, res) => {
   const id = req?.params?.id;
-  const image = req?.file?.filename;
+  const image = req?.files?.image?.[0]?.filename; // Main image
+  const featureProductImages = req?.files?.featureProductImages || [];
   const data = req?.body;
+
+  let featureProduct = [];
+  if (data.featureProduct) {
+    try {
+      featureProduct = JSON.parse(data.featureProduct); // Parse the featureProduct string
+      featureProduct = featureProduct.map((product, index) => ({
+        ...product,
+        image: featureProductImages[index]?.filename || product.image || "",
+      }));
+    } catch (err) {
+      return res.json({
+        success: false,
+        message: "Invalid featureProduct format",
+      });
+    }
+  }
 
   try {
     const isExist = await AboutUs.findById(id);
@@ -68,7 +103,7 @@ exports.updateAboutUs = async (req, res) => {
     let newData;
 
     if (image) {
-      fs.unlink(`./uploads/aboutus${isExist.image}`, (err) => {
+      fs.unlink(`./uploads/aboutus/${isExist.image}`, (err) => {
         if (err) {
           console.log(err);
         }
@@ -77,9 +112,10 @@ exports.updateAboutUs = async (req, res) => {
       newData = {
         ...data,
         image,
+        featureProduct,
       };
     } else {
-      newData = { ...data };
+      newData = { ...data, featureProduct };
     }
 
     const result = await AboutUs.findByIdAndUpdate(id, newData, {

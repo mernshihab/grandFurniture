@@ -17,6 +17,22 @@ const AboutSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  featureProduct: [
+    {
+      title: {
+        type: String,
+        required: true,
+      },
+      description: {
+        type: String,
+        required: true,
+      },
+      image: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
 
 const AboutUs = mongoose.model("AboutUs", AboutSchema);
