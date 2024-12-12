@@ -34,21 +34,23 @@ export default function AccountLayout() {
   return (
     <>
       <Header />
-      <section className="container min-h-[60vh] py-2">
-        <div className="items-start gap-5 lg:flex">
-          <aside
-            className={`account_sidebar ${sidebar && "account_sidebar_show"}`}
-          >
-            <AccountSidebar />
-          </aside>
+      <div className="mt-24">
+        <section className="container min-h-[60vh] py-2">
+          <div className="items-start gap-5 lg:flex">
+            <aside
+              className={`account_sidebar ${sidebar && "account_sidebar_show"}`}
+            >
+              <AccountSidebar />
+            </aside>
 
-          <>
-            <main className="account_content">
-              <Outlet />
-            </main>
-          </>
-        </div>
-      </section>
+            <>
+              <main className="account_content">
+                <Outlet />
+              </main>
+            </>
+          </div>
+        </section>
+      </div>
       <Footer />
 
       <MobileBottomHeader setSidebar={setSidebar} />

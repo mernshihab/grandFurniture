@@ -4,55 +4,17 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Pagination, Navigation } from "swiper/modules";
 import { useState } from "react";
-
-const reviews = [
-  {
-    id: 1,
-    name: "Raisul Kabir",
-    title: "MD, Brainstation 23",
-    review: "They have a very well-behaved and professional customer service.",
-    image: "https://via.placeholder.com/80",
-    rating: 5,
-  },
-  {
-    id: 2,
-    name: "Raisul Kabir",
-    title: "MD, Brainstation 23",
-    review: "They have a very well-behaved and professional customer service.",
-    image: "https://via.placeholder.com/80",
-    rating: 5,
-  },
-  {
-    id: 3,
-    name: "Raisul Kabir",
-    title: "MD, Brainstation 23",
-    review: "They have a very well-behaved and professional customer service.",
-    image: "https://via.placeholder.com/80",
-    rating: 5,
-  },
-  {
-    id: 4,
-    name: "Raisul Kabir",
-    title: "MD, Brainstation 23",
-    review: "They have a very well-behaved and professional customer service.",
-    image: "https://via.placeholder.com/80",
-    rating: 5,
-  },
-  {
-    id: 5,
-    name: "Raisul Kabir",
-    title: "MD, Brainstation 23",
-    review: "They have a very well-behaved and professional customer service.",
-    image: "https://via.placeholder.com/80",
-    rating: 5,
-  },
-];
+import { useGetAllReviewsQuery } from "../../../Redux/review/reviewApi";
 
 export default function ReviewSlider() {
   const [activeIndex, setActiveIndex] = useState(0);
 
+  const { data } = useGetAllReviewsQuery();
+
+  const reviews = data?.data;
+
   const handleSlideChange = (swiper) => {
-    setActiveIndex(swiper.activeIndex % reviews.length); // Handle loop
+    setActiveIndex(swiper?.activeIndex % reviews?.length); // Handle loop
   };
 
   return (
@@ -84,15 +46,15 @@ export default function ReviewSlider() {
           className="pb-10"
           onSlideChange={handleSlideChange}
         >
-          {reviews.map((review, index) => (
-            <SwiperSlide key={review.id}>
+          {reviews?.map((review, index) => (
+            <SwiperSlide key={review?.id}>
               <div
                 className={`flex flex-col items-center rounded-lg bg-white p-6 text-black shadow-lg transition-transform duration-300 ${
                   activeIndex === index ? "scale-105" : "scale-100"
                 }`}
               >
                 <div className="mb-4 flex justify-center">
-                  {Array(review.rating)
+                  {Array(review?.rating)
                     .fill()
                     .map((_, i) => (
                       <span key={i} className="text-xl text-yellow-500">
@@ -100,13 +62,13 @@ export default function ReviewSlider() {
                       </span>
                     ))}
                 </div>
-                <p className="mb-6 text-center italic">{review.review}</p>
+                <p className="mb-6 text-center italic">{review?.description}</p>
                 <img
-                  src={review.image}
-                  alt={review.name}
+                  src={`${import.meta.env.VITE_BACKEND_URL}/user/${review?.user?.image}`}
+                  alt={review?.name}
                   className="mb-4 h-16 w-16 rounded-full"
                 />
-                <h4 className="font-bold">{review.name}</h4>
+                <h4 className="font-bold">{review?.user?.name}</h4>
                 <p className="text-sm text-gray-500">{review.title}</p>
               </div>
             </SwiperSlide>

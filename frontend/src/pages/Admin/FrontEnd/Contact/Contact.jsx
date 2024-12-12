@@ -33,6 +33,7 @@ export default function Contact() {
     const whatsapp = form.whatsapp.value;
     const email = form.email.value;
     const address = form.address.value;
+    const videoURL = form.videoURL.value;
 
     const contactInfo = {
       title,
@@ -41,6 +42,7 @@ export default function Contact() {
       email,
       address,
       socials,
+      videoURL,
     };
 
     if (id) {
@@ -124,6 +126,14 @@ export default function Contact() {
             name="address"
             rows="3"
             defaultValue={data?.data[0]?.address}
+          ></textarea>
+        </div>
+        <div>
+          <p className="text-neutral-content">VideoURL</p>
+          <textarea
+            name="videoURL"
+            rows="3"
+            defaultValue={data?.data[0]?.videoURL}
           ></textarea>
         </div>
 

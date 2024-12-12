@@ -20,6 +20,9 @@ const ContactSchema = new mongoose.Schema(
     socials: {
       type: Array,
     },
+    videoURL: {
+      type: String,
+    },
   },
   { timestamps: false }
 );

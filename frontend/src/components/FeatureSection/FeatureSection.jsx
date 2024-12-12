@@ -6,7 +6,6 @@ export default function FeatureSection() {
 
   const features = data?.data;
 
-
   return (
     <div className="py-10">
       <div className="container mx-auto">
