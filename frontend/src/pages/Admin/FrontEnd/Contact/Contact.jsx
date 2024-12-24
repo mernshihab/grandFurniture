@@ -28,12 +28,13 @@ export default function Contact() {
   const handleContact = async (e) => {
     e.preventDefault();
     const form = e.target;
-    const title = form.title.value;
-    const phone = form.phone.value;
-    const whatsapp = form.whatsapp.value;
-    const email = form.email.value;
-    const address = form.address.value;
-    const videoURL = form.videoURL.value;
+    const title = form.title.value.trim();
+    const phone = form.phone.value.trim();
+    const whatsapp = form.whatsapp.value.trim();
+    const email = form.email.value.trim();
+    const address = form.address.value.trim();
+    const videoURL = form.videoURL.value.trim();
+    const location = form.location.value.trim();
 
     const contactInfo = {
       title,
@@ -43,28 +44,27 @@ export default function Contact() {
       address,
       socials,
       videoURL,
+      location
     };
 
-    if (id) {
-      const res = await updateContact({ id, contactInfo });
-      if (res?.data?.success) {
-        toast.success("Contact updated successfully");
+    try {
+      let res;
+      if (id) {
+        res = await updateContact({ id, contactInfo });
       } else {
-        toast.error(
-          res?.data?.message ? res?.data?.message : "Something went wrong",
-        );
-        console.log(res);
+        res = await addContact(contactInfo);
       }
-    } else {
-      const res = await addContact(contactInfo);
+
       if (res?.data?.success) {
-        toast.success("Contact add successfully");
-      } else {
-        toast.error(
-          res?.data?.message ? res?.data?.message : "Something went wrong",
+        toast.success(
+          id ? "Contact updated successfully" : "Contact added successfully",
         );
-        console.log(res);
+      } else {
+        throw new Error(res?.data?.message || "Something went wrong");
       }
+    } catch (error) {
+      toast.error(error.message);
+      console.error(error);
     }
   };
 
@@ -86,7 +86,7 @@ export default function Contact() {
             <input
               type="text"
               name="title"
-              defaultValue={data?.data[0]?.title}
+              defaultValue={data?.data[0]?.title || ""}
             />
           </div>
 
@@ -95,7 +95,7 @@ export default function Contact() {
             <input
               type="email"
               name="email"
-              defaultValue={data?.data[0]?.email}
+              defaultValue={data?.data[0]?.email || ""}
             />
           </div>
         </div>
@@ -106,7 +106,7 @@ export default function Contact() {
             <input
               type="text"
               name="phone"
-              defaultValue={data?.data[0]?.phone}
+              defaultValue={data?.data[0]?.phone || ""}
             />
           </div>
 
@@ -115,7 +115,7 @@ export default function Contact() {
             <input
               type="text"
               name="whatsapp"
-              defaultValue={data?.data[0]?.whatsapp}
+              defaultValue={data?.data[0]?.whatsapp || ""}
             />
           </div>
         </div>
@@ -125,15 +125,23 @@ export default function Contact() {
           <textarea
             name="address"
             rows="3"
-            defaultValue={data?.data[0]?.address}
+            defaultValue={data?.data[0]?.address || ""}
           ></textarea>
         </div>
         <div>
-          <p className="text-neutral-content">VideoURL</p>
+          <p className="text-neutral-content">Video URL</p>
           <textarea
             name="videoURL"
             rows="3"
-            defaultValue={data?.data[0]?.videoURL}
+            defaultValue={data?.data[0]?.videoURL || ""}
+          ></textarea>
+        </div>
+        <div>
+          <p className="text-neutral-content">Map Location</p>
+          <textarea
+            name="location"
+            rows="3"
+            defaultValue={data?.data[0]?.location || ""}
           ></textarea>
         </div>
 
@@ -141,7 +149,7 @@ export default function Contact() {
 
         <div className="flex justify-end">
           <button
-            disabled={updateLoading && "disabled"}
+            disabled={updateLoading || addLoading}
             className="primary_btn"
           >
             {updateLoading || addLoading ? "Loading..." : id ? "Update" : "Add"}

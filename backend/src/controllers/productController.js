@@ -30,7 +30,7 @@ exports.addProduct = async (req, res) => {
 
   let product = {
     ...req.body,
-    slug: slugify(`${title}-${Date.now()}`), // Correct template literal
+    slug: slugify(`${title}-${Date.now()}`), 
     thumbnail,
   };
 

@@ -1,8 +1,11 @@
 const SubCategory = require("../../../models/subCategoryModel");
 const Category = require("../../../models/categoriesModel");
 const makeSlug = require("../../../utils/makeSlug");
+const fs = require("fs");
+const path = require("path");
 
 exports.insert = async (req, res) => {
+  const icon = req?.file?.filename;
   try {
     const { name, categoryId } = req.body;
 
@@ -10,6 +13,7 @@ exports.insert = async (req, res) => {
       name,
       slug: makeSlug(name) + "-" + Date.now(),
       category: categoryId,
+      icon: `/subCategories/${icon}`,
     });
 
     await newSubCategory.save();
@@ -36,7 +40,7 @@ exports.insert = async (req, res) => {
   } catch (error) {
     res.json({
       success: false,
-      message: error.message,
+      message: "Error creating subcategory",
     });
   }
 };
@@ -98,11 +102,14 @@ exports.update = async (req, res) => {
     }
 
     // Check if the category is being changed
-    if (categoryId && subCategory?.category !== categoryId) {
+    if (categoryId && subCategory?.category.toString() !== categoryId) {
       const oldCategoryId = subCategory?.category;
       const oldCategory = await Category.findById(oldCategoryId);
-      oldCategory.subCategories.pull(req.params.id);
-      await oldCategory.save();
+
+      if (oldCategory) {
+        oldCategory.subCategories.pull(req.params.id);
+        await oldCategory.save();
+      }
 
       // Add subcategory to the new category
       const newCategory = await Category.findById(categoryId);
@@ -113,9 +120,28 @@ exports.update = async (req, res) => {
       }
     }
 
+    // Handle icon update
+    if (req?.file?.filename) {
+      const newIconPath = `/subCategories/${req.file.filename}`;
+
+      // Delete old icon file if it exists
+      const oldIconPath = path.join(
+        __dirname,
+        "../../../../uploads/",
+        subCategory.icon
+      );
+      if (fs.existsSync(oldIconPath)) {
+        fs.unlinkSync(oldIconPath);
+      }
+
+      subCategory.icon = newIconPath;
+    }
+
     // Update the other fields of subCategory
-    if (name) subCategory.name = name;
-    if (name) subCategory.slug = makeSlug(name) + "-" + Date.now();
+    if (name) {
+      subCategory.name = name;
+      subCategory.slug = makeSlug(name) + "-" + Date.now();
+    }
 
     await subCategory.save();
 
@@ -148,6 +174,12 @@ exports.destroy = async (req, res) => {
         success: false,
         message: "SubCategory has SubSubCategories. Please delete them first.",
       });
+    }
+
+    // Delete the icon file if it exists
+    const iconPath = path.join(__dirname, "../../../../uploads/", subCategory.icon);
+    if (fs.existsSync(iconPath)) {
+      fs.unlinkSync(iconPath);
     }
 
     const result = await SubCategory.findByIdAndDelete(req.params.id);

@@ -23,6 +23,7 @@ export default function AllSubCategories() {
 
     if (isConfirm) {
       const result = await deleteSubCategory({ id, categoryId });
+      console.log(result)
       if (result?.data?.success) {
         Swal.fire("", "Delete Success", "success");
       } else {

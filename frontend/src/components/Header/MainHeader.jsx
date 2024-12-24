@@ -102,52 +102,25 @@ export default function MainHeader() {
 
           <nav className="hidden lg:block">
             <ul className="flex items-center font-medium">
-              {/* All Collection Dropdown */}
-              <li className="group relative">
+              <li>
                 <NavLink
-                  to="#"
+                  to="/"
                   className="block px-3 duration-200 hover:text-primary"
                 >
-                  All Collection
+                  Home
                 </NavLink>
-                {/* Dropdown */}
-                <div className="absolute left-0 hidden w-max space-y-2 border-t bg-white text-black shadow-lg group-hover:block">
-                  {categories?.map((category, index) => (
-                    <NavLink
-                      key={index}
-                      to={`/shops/${category?.slug}`}
-                      className="block px-4 py-2 duration-200 hover:bg-gray-200 hover:text-primary"
-                    >
-                      {category?.name}
-                    </NavLink>
-                  ))}
-                </div>
               </li>
 
-              {/* <li>
-                <NavLink
-                  to="/shops"
-                  className="block px-3 duration-200 hover:text-primary"
-                >
-                  Shop
-                </NavLink>
-              </li> */}
-              <li>
-                <NavLink
-                  to={`/pages/${elevatDeskCategory?.slug}`}
-                  className="block px-3 duration-200 hover:text-primary"
-                >
-                  {elevatDeskCategory?.name}
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/shops/grid-line-items"
-                  className="block px-3 duration-200 hover:text-primary"
-                >
-                  Line Collection
-                </NavLink>
-              </li>
+              {categories?.map((category, index) => (
+                <li key={index} className="group relative">
+                  <NavLink
+                    to={`/shops/${category?.slug}`}
+                    className="block px-3 duration-200 hover:text-primary"
+                  >
+                    {category?.name}
+                  </NavLink>
+                </li>
+              ))}
               <li>
                 <NavLink
                   to={youtubeSocial?.url}
@@ -157,14 +130,7 @@ export default function MainHeader() {
                   Videos
                 </NavLink>
               </li>
-              <li>
-                <NavLink
-                  to="/about-us"
-                  className="block px-3 duration-200 hover:text-primary"
-                >
-                  About
-                </NavLink>
-              </li>
+
               <li>
                 <NavLink
                   to="/contact-us"

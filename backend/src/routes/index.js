@@ -38,6 +38,10 @@ const paymentRouter = require("./paymentRoute");
 
 const featureProjectRoutes = require("./featureProjectRoutes");
 
+const privacy = require("./privacyRoute");
+const termcondition = require("./termconditionRoute");
+const returnPolicy = require("./returnPolicyRoute");
+
 //------------------------------------------------------------------------------
 // use Routes
 //------------------------------------------------------------------------------
@@ -75,5 +79,9 @@ router.use("/businessInfo", businessInfoRoutes);
 
 router.use("/order", orderRouter);
 router.use("/payment", paymentRouter);
+
+router.use("/privacy", privacy);
+router.use("/terms-condition", termcondition);
+router.use("/return-policy", returnPolicy);
 
 module.exports = router;

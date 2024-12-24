@@ -51,7 +51,7 @@ exports.get = async (req, res) => {
       .sort({ order: 1 })
       .populate({
         path: "subCategories",
-        select: "name slug subSubCategories",
+        select: "name slug subSubCategories icon",
         populate: {
           path: "subSubCategories",
           select: "name slug",
@@ -74,7 +74,7 @@ exports.getById = async (req, res) => {
   try {
     const category = await Model.findById(req.params.id).populate({
       path: "subCategories",
-      select: "name slug subSubCategories",
+      select: "name slug subSubCategories icon",
       populate: {
         path: "subSubCategories",
         select: "name slug",

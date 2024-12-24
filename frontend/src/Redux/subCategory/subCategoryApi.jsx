@@ -17,19 +17,26 @@ export const subCategoryApi = apiSlice.injectEndpoints({
     }),
 
     addSubCategory: builder.mutation({
-      query: (data) => ({
+      query: (formData) => ({
         url: `/subCategory/add`,
         method: "POST",
-        body: data,
+        body: formData,
       }),
       invalidatesTags: ["sub_category"],
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          console.error("Add subcategory failed:", error);
+        }
+      },
     }),
 
     updateSubCategory: builder.mutation({
-      query: ({ id, data }) => ({
+      query: ({ id, formData }) => ({
         url: `/subCategory/update/${id}`,
         method: "PATCH",
-        body: data,
+        body: formData,
       }),
       invalidatesTags: ["sub_category"],
     }),

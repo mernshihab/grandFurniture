@@ -23,6 +23,9 @@ const ContactSchema = new mongoose.Schema(
     videoURL: {
       type: String,
     },
+    location: {
+      type: String,
+    },
   },
   { timestamps: false }
 );

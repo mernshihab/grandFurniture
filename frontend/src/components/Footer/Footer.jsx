@@ -93,6 +93,21 @@ export default function Footer() {
                   Contact Us
                 </Link>
               </li>
+              <li className="mb-2">
+                <Link to="/privacy-policy" className="hover:underline">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li className="mb-2">
+                <Link to="/terms-conditions" className="hover:underline">
+                  Terms & Conditions
+                </Link>
+              </li>
+              <li className="mb-2">
+                <Link to="/return-policy" className="hover:underline">
+                  Return Policy
+                </Link>
+              </li>
             </ul>
           </div>
 

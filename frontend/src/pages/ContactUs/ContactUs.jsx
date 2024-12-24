@@ -15,8 +15,10 @@ export default function ContactUs() {
   const { data } = useGetContactQuery();
   const contact = data?.data[0];
 
+  console.log(contact);
+
   return (
-    <section className="py-5 mt-20">
+    <section className="mt-20 py-5">
       <h1 className="mb-6 text-center text-xl sm:text-2xl">{contact?.title}</h1>
       <div className="container">
         <div className="flex flex-wrap justify-center gap-4">
@@ -67,6 +69,18 @@ export default function ContactUs() {
           </Link>
         ))}
       </ul>
+      {contact?.location && (
+        <div className="mt-6 md:mt-10">
+          <iframe
+            src={contact?.location}
+            width="100%"
+            height="420"
+            allowfullscreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      )}
     </section>
   );
 }

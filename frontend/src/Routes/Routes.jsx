@@ -20,6 +20,12 @@ import AddClient from "../pages/Admin/Clients/AddClient";
 import FeaturesProjectList from "../pages/Admin/FeaturesProject/FeaturesProjectList";
 import AddFeaturesProject from "../pages/Admin/FeaturesProject/AddFeaturesProject";
 import EditFeaturesProject from "../pages/Admin/FeaturesProject/EditFeaturesProject";
+import AdminPrivacyPolicy from "../pages/Admin/PrivacyPolicy/AdminPrivacyPolicy";
+import AdminTermsCondition from "../pages/Admin/TermsCondition/AdminTermsCondition";
+import AdminReturnPolicy from "../pages/Admin/ReturnPolicy/AdminReturnPolicy";
+import PrivacyPolicy from "../pages/PrivacyPolicy";
+import TermsCondition from "../pages/TermsCondition";
+import ReturnPolicy from "../pages/ReturnPolicy";
 
 // Main pages
 const Cart = React.lazy(() => import("../pages/Cart/Cart"));
@@ -231,6 +237,18 @@ export const routes = createBrowserRouter([
       {
         path: "/test",
         element: <Test />,
+      },
+      {
+        path: "/privacy-policy",
+        element: <PrivacyPolicy />,
+      },
+      {
+        path: "/terms-conditions",
+        element: <TermsCondition />,
+      },
+      {
+        path: "/return-policy",
+        element: <ReturnPolicy />,
       },
       {
         path: "/shops",
@@ -462,6 +480,18 @@ export const routes = createBrowserRouter([
         element: <EditColor />,
       },
       {
+        path: "/admin/front-end/privacy-policy",
+        element: <AdminPrivacyPolicy />,
+      },
+      {
+        path: "/admin/front-end/terms-conditions",
+        element: <AdminTermsCondition />,
+      },
+      {
+        path: "/admin/front-end/return-policy",
+        element: <AdminReturnPolicy />,
+      },
+      {
         path: "/admin/product/all-products",
         element: <ProductList />,
       },
@@ -487,11 +517,11 @@ export const routes = createBrowserRouter([
       },
       {
         path: "/admin/client/all-client",
-        element: <AllClients/>,
+        element: <AllClients />,
       },
       {
         path: "/admin/client/add-client",
-        element: <AddClient/>,
+        element: <AddClient />,
       },
       {
         path: "/admin/customer/all-customers",
@@ -499,15 +529,15 @@ export const routes = createBrowserRouter([
       },
       {
         path: "/admin/featured",
-        element: <FeaturesProjectList/>,
+        element: <FeaturesProjectList />,
       },
       {
         path: "/admin/featured/add",
-        element: <AddFeaturesProject/>,
+        element: <AddFeaturesProject />,
       },
       {
         path: "/admin/featured/edit/:id",
-        element: <EditFeaturesProject/>,
+        element: <EditFeaturesProject />,
       },
 
       //--------------Flash Deal

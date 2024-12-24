@@ -60,12 +60,12 @@ export default function MultiSocial({
       {social?.map((input, index) => (
         <div key={index} className="flex gap-2 text-sm">
           <select
-            value={input.icon}
+            defaultValue={input.icon}
             onChange={(event) => handleIconChange(index, event)}
           >
-            <option value="">Select Platform</option>
+            <option defaultValue="">Select Platform</option>
             {iconOptions.map((option) => (
-              <option key={option.value} value={option.value}>
+              <option key={option.value} defaultValue={option.value}>
                 {option.label}
               </option>
             ))}
@@ -74,7 +74,7 @@ export default function MultiSocial({
             type="text"
             name="url"
             placeholder="Social Media URL"
-            value={input.url}
+            defaultValue={input.url}
             onChange={(event) => handleInputChange(index, event)}
           />
           <button
