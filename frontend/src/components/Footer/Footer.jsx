@@ -6,6 +6,8 @@ import { useGetCategoriesQuery } from "../../Redux/category/categoryApi";
 import { useGetContactQuery } from "../../Redux/contact/contactApi";
 import { useGetMainLogoQuery } from "../../Redux/logo/logoApi";
 import { useGetBusinessInfoQuery } from "../../Redux/businessInfoApi/businessInfoApi";
+import MessangerBtn from "../MessangerBtn/MessangerBtn";
+import WhatsappBtn from "../WhatsappBtn/WhatsappBtn";
 
 export default function Footer() {
   const { data, isLoading } = useGetCategoriesQuery();
@@ -158,6 +160,8 @@ export default function Footer() {
           </ul>
         </div>
       </div>
+      <MessangerBtn />
+      <WhatsappBtn />
     </footer>
   );
 }

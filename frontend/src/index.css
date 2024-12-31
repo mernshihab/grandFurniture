@@ -152,6 +152,10 @@ header nav ul li a:hover {
   transition: all 0.3s ease;
 }
 
+.hero_overlay {
+  background: linear-gradient(0deg, transparent, #000 200%);
+}
+
 .overlay_show {
   opacity: 1;
   visibility: visible;
@@ -189,11 +193,11 @@ header nav ul li a:hover {
 
 /* ------Product Card--------------- */
 .product_card .product_img {
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
 }
 
 .product_card:hover .product_img {
-  transform: scale(1.2);
+  transform: scale(1.08);
 }
 
 .product_card:hover .title {

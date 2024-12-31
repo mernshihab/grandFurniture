@@ -88,10 +88,10 @@ exports.getById = async (req, res) => {
     });
   }
 };
-
+ 
 exports.update = async (req, res) => {
   try {
-    const { name, categoryId } = req.body;
+    const { name, categoryId, featured } = req.body;
     const subCategory = await SubCategory.findById(req.params.id);
 
     if (!subCategory) {
@@ -143,6 +143,10 @@ exports.update = async (req, res) => {
       subCategory.slug = makeSlug(name) + "-" + Date.now();
     }
 
+    if (featured) {
+      subCategory.featured = featured;
+    }
+
     await subCategory.save();
 
     res.status(200).json({
@@ -177,7 +181,11 @@ exports.destroy = async (req, res) => {
     }
 
     // Delete the icon file if it exists
-    const iconPath = path.join(__dirname, "../../../../uploads/", subCategory.icon);
+    const iconPath = path.join(
+      __dirname,
+      "../../../../uploads/",
+      subCategory.icon
+    );
     if (fs.existsSync(iconPath)) {
       fs.unlinkSync(iconPath);
     }

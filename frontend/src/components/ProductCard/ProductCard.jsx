@@ -19,7 +19,7 @@ export default function ProductCard({ product, discount: flashDiscount = 0 }) {
               <img
                 src={`${import.meta.env.VITE_BACKEND_URL}/products/${thumbnail}`}
                 alt={title}
-                className="product_img h-[90%] md:h-full w-full object-cover"
+                className="product_img h-[90%] w-full object-cover md:h-full"
                 loading="lazy"
               />
 
@@ -40,12 +40,14 @@ export default function ProductCard({ product, discount: flashDiscount = 0 }) {
               <div className="flex items-center gap-2">
                 {newDiscount > 0 && (
                   <del className="text-xs sm:text-sm">
-                    Tk{parseInt(sellingPrice)}
+                    Tk{parseInt(sellingPrice).toLocaleString()}
                   </del>
                 )}
                 <p className="text-sm sm:text-lg">
                   Tk
-                  {parseInt(sellingPrice - (sellingPrice * newDiscount) / 100)}
+                  {parseInt(
+                    sellingPrice - (sellingPrice * newDiscount) / 100,
+                  ).toLocaleString()}
                 </p>
               </div>
             </div>

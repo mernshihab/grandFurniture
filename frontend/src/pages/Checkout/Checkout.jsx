@@ -260,7 +260,7 @@ export default function Checkout() {
                 <textarea
                   name="fullAdress"
                   rows="3"
-                  placeholder="House number and fullAdress name"
+                  placeholder="House number and Full Adress name"
                   className="mt-2 w-full rounded border-2 p-2 outline-none"
                   required
                 ></textarea>

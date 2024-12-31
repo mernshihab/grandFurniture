@@ -115,7 +115,6 @@ export default function AddProduct() {
     }
 
     const res = await addProduct(formData);
-    console.log(res);
     if (res?.data?.success) {
       toast.success("Product added successfully");
       navigate("/admin/product/all-products");

@@ -40,6 +40,7 @@ export default function ProductInfo({ product, parcerDescription }) {
     variant,
   } = product;
 
+  console.log(product);
   const [selectedImage, setSelectedImage] = useState(thumbnail);
 
   const sizes = variant?.map((item) => item.size);
@@ -60,6 +61,7 @@ export default function ProductInfo({ product, parcerDescription }) {
   const [selectedSku, setSelectedSku] = useState();
 
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+  
 
   const handelSelectSize = (size) => {
     if (selectedSize === size) {
@@ -67,6 +69,7 @@ export default function ProductInfo({ product, parcerDescription }) {
     } else {
       setSelectedSize(size);
     }
+    updateSelectedSku(size, selectedColor)
   };
 
   const handelColorSelect = (clr) => {
@@ -75,17 +78,32 @@ export default function ProductInfo({ product, parcerDescription }) {
     } else {
       setSelectedColor(clr);
     }
+
+    updateSelectedSku(selectedSize, clr);
+  };
+
+  const updateSelectedSku = (size, color) => {
+    if (size && color) {
+      const selectedVariant = variant?.find(
+        (item) => item.size === size && item.color === color
+      );
+      if (selectedVariant) {
+        setSelectedSku(selectedVariant.sku); // Set the selected SKU
+        setSelectedPrice(selectedVariant.price); // Set the price of the selected variant
+        setSelectedStock(selectedVariant.stock); // Set the stock of the selected variant
+      }
+    }
   };
 
   const handleBuyNow = () => {
     if (variant?.length > 0 && !selectedSize) {
       return Swal.fire("", "Please Select Size", "warning");
     }
-
+  
     if (variant?.length > 0 && !selectedColor) {
       return Swal.fire("", "Please Select Color", "warning");
     }
-
+  
     const cartProduct = {
       _id: product._id,
       discount: discount,
@@ -93,10 +111,10 @@ export default function ProductInfo({ product, parcerDescription }) {
       thumbnail,
       title,
       quantity: selectedQuantity,
-      sku: selectedSku,
+      sku: selectedSku, // Use the selected SKU
       stock: selectedStock,
     };
-
+  
     dispatch(addToCart([cartProduct]));
     navigate("/checkout");
   };
@@ -105,11 +123,11 @@ export default function ProductInfo({ product, parcerDescription }) {
     if (variant?.length > 0 && !selectedSize) {
       return Swal.fire("", "Please Select Size", "warning");
     }
-
+  
     if (variant?.length > 0 && !selectedColor) {
       return Swal.fire("", "Please Select Color", "warning");
     }
-
+  
     const cartProduct = {
       _id: product._id,
       discount: discount,
@@ -117,15 +135,15 @@ export default function ProductInfo({ product, parcerDescription }) {
       thumbnail,
       title,
       quantity: selectedQuantity,
-      sku: selectedSku,
+      sku: selectedSku, // Use the selected SKU
       stock: selectedStock,
     };
-
+  
     if (carts?.length > 0) {
       const findProduct = carts?.find(
-        (p) => p._id === cartProduct._id && selectedSku == p.sku,
+        (p) => p._id === cartProduct._id && selectedSku === p.sku
       );
-
+  
       if (findProduct) {
         return toast.error("Product already added to cart");
       } else {
@@ -136,7 +154,7 @@ export default function ProductInfo({ product, parcerDescription }) {
       dispatch(addToCart([cartProduct]));
       toast.success("Item added to cart successfully");
     }
-
+  
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: "add_to_cart",
@@ -151,7 +169,7 @@ export default function ProductInfo({ product, parcerDescription }) {
               discount: discount,
               brand: brand,
               category: category?.name,
-              variant: selectedSku,
+              variant: selectedSku, // Include selected SKU
               quantity: selectedQuantity || 0,
             },
           ],

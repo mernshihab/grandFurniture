@@ -31,6 +31,7 @@ export default function Contact() {
     const title = form.title.value.trim();
     const phone = form.phone.value.trim();
     const whatsapp = form.whatsapp.value.trim();
+    const messenger = form.messenger.value.trim();
     const email = form.email.value.trim();
     const address = form.address.value.trim();
     const videoURL = form.videoURL.value.trim();
@@ -40,6 +41,7 @@ export default function Contact() {
       title,
       phone,
       whatsapp,
+      messenger,
       email,
       address,
       socials,
@@ -116,6 +118,14 @@ export default function Contact() {
               type="text"
               name="whatsapp"
               defaultValue={data?.data[0]?.whatsapp || ""}
+            />
+          </div>
+          <div>
+            <p className="text-neutral-content">Messenger</p>
+            <input
+              type="text"
+              name="messenger"
+              defaultValue={data?.data[0]?.messenger || ""}
             />
           </div>
         </div>

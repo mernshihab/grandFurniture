@@ -14,6 +14,9 @@ const ContactSchema = new mongoose.Schema(
     whatsapp: {
       type: String,
     },
+    messenger: {
+      type: String,
+    },
     address: {
       type: String,
     },

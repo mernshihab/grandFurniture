@@ -24,7 +24,8 @@ const ChooseByCategory = () => {
           </h3>
           <div className="grid gap-5 md:grid-cols-2" key={i}>
             {category?.subCategories?.map((subCategory, i) => (
-              <Link to={`/shops/${category?.slug}/${subCategory.slug}`}
+              <Link
+                to={`/shops/${category?.slug}/${subCategory.slug}`}
                 className="group relative flex flex-col items-center justify-center"
                 key={i}
               >
@@ -62,7 +63,7 @@ const ChooseByCategory = () => {
           </p>
         </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-2 md:gap-10">{content}</div>
+        <div className="mt-4 grid grid-cols-2 gap-2 md:gap-14">{content}</div>
       </div>
     </div>
   );

@@ -51,7 +51,7 @@ exports.get = async (req, res) => {
       .sort({ order: 1 })
       .populate({
         path: "subCategories",
-        select: "name slug subSubCategories icon",
+        select: "name slug subSubCategories icon featured",
         populate: {
           path: "subSubCategories",
           select: "name slug",

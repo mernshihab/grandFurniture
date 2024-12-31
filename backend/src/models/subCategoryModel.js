@@ -11,6 +11,10 @@ const SubCategorySchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    featured: {
+      type: Boolean,
+      default: false,
+    },
     icon: {
       type: String,
       required: true,

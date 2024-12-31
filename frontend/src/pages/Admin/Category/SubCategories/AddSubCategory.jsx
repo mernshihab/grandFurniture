@@ -10,6 +10,7 @@ export default function AddSubCategory() {
   const navigate = useNavigate();
   const { data, isSuccess } = useGetCategoriesQuery();
   const [icons, seticons] = useState([]);
+  const [featured, setFeatured] = useState(false);
   const [addSubCategory, { isLoading }] = useAddSubCategoryMutation();
 
   const handleAddCategory = async (e) => {
@@ -28,6 +29,7 @@ export default function AddSubCategory() {
     const formData = new FormData();
     formData.append("icon", icon);
     formData.append("name", name);
+    formData.append("featured", featured);
     formData.append("categoryId", categoryId);
 
     const result = await addSubCategory(formData);
@@ -100,6 +102,24 @@ export default function AddSubCategory() {
               </option>
             ))}
         </select>
+      </div>
+
+      <div className="mt-6 rounded border p-4">
+        <p className="text-sm">Featured Subcategory</p>
+        <div className="mt-2">
+          <div className="flex items-center gap-2">
+            <p>Status:</p>
+            <label className="relative inline-flex cursor-pointer items-center">
+              <input
+                onChange={() => setFeatured(!featured)}
+                type="checkbox"
+                value={featured}
+                className="peer sr-only"
+              />
+              <div className="peer h-[23px] w-11 rounded-full bg-gray-200 after:absolute after:start-[1px] after:top-[1.5px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white rtl:peer-checked:after:-translate-x-full"></div>
+            </label>
+          </div>
+        </div>
       </div>
 
       <div className="mt-4">

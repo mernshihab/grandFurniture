@@ -133,6 +133,14 @@ export default function MainHeader() {
 
               <li>
                 <NavLink
+                  to="/about-us"
+                  className="block px-3 duration-200 hover:text-primary"
+                >
+                  About us
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
                   to="/contact-us"
                   className="block px-3 duration-200 hover:text-primary"
                 >
@@ -258,7 +266,7 @@ export default function MainHeader() {
             ) : (
               <Link
                 to="/login"
-                className="flex items-center gap-1.5  duration-300 hover:text-primary"
+                className="flex items-center gap-1.5 duration-300 hover:text-primary"
               >
                 <FiLogIn className="text-xl sm:text-[17px]" />
                 <h1 className="hidden font-medium sm:block">Login</h1>

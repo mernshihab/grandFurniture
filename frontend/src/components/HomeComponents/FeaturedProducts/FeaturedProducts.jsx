@@ -42,7 +42,7 @@ export default function FeaturedProducts() {
     <div className="mt-2">
       <div className="container p-4">
         <div className="">
-          <h1 className="text-center font-bold text-neutral md:text-2xl ">
+          <h1 className="text-center font-bold text-neutral md:text-2xl">
             Featured
           </h1>
         </div>
@@ -50,21 +50,23 @@ export default function FeaturedProducts() {
         <div className="flex justify-center gap-2">
           {categories?.map((category) => (
             <div key={category?._id}>
-              {category?.subCategories?.map((subCategory) => (
-                <button
-                  key={subCategory?._id}
-                  className={`px-4 py-2 text-xl font-semibold ${
-                    filter === subCategory?._id &&
-                    "border-b-[1px] border-black"
-                  }`}
-                  onClick={() => {
-                    setFilter(subCategory?._id);
-                    setSearchParams(subCategory?._id);
-                  }}
-                >
-                  {subCategory?.name}
-                </button>
-              ))}
+              {category?.subCategories
+                ?.filter((subCategory) => subCategory.featured)
+                ?.map((subCategory) => (
+                  <button
+                    key={subCategory?._id}
+                    className={`px-4 py-2 text-xl font-semibold ${
+                      filter === subCategory?._id &&
+                      "border-b-[1px] border-black"
+                    }`}
+                    onClick={() => {
+                      setFilter(subCategory?._id);
+                      setSearchParams(subCategory?._id);
+                    }}
+                  >
+                    {subCategory?.name}
+                  </button>
+                ))}
             </div>
           ))}
           <button

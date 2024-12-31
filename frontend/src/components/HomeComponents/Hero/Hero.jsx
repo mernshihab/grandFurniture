@@ -26,7 +26,8 @@ export default function Hero() {
               loading="lazy"
             />
             {/* Overlay for text */}
-            <div className="absolute left-0 top-0 flex h-full w-full flex-col items-center justify-center bg-black/40 p-4">
+            <div className="absolute left-0 top-0 flex h-full w-full flex-col items-center justify-center hero_overlay p-4">
+
               <h1 className="mb-2 text-3xl font-bold text-white sm:text-4xl md:text-6xl">
                 Modern Furniture
               </h1>
@@ -49,7 +50,7 @@ export default function Hero() {
   return (
     <section>
       <div className="">
-        <div className="items-start gap-4 lg:flex">
+        <div className=" items-start gap-4 lg:flex">
           <div className="hero_slider mt-2 h-[45vh] sm:h-[45vh] lg:mt-0 lg:h-screen">
             <Swiper
               navigation={true}

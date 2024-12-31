@@ -4,8 +4,6 @@ export default function Clients() {
   const { data, isError, isSuccess } = useGetAllClientQuery();
   const clients = data?.data;
 
-  console.log(clients);
-
   return (
     <section className="py-14">
       <h2 className="mb-4 text-center text-2xl font-medium text-neutral sm:text-3xl">
