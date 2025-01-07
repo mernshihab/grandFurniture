@@ -47,7 +47,6 @@ export default function EditProduct() {
   const { data: subCategory } = useGetSubCategoryQuery(subCategoryId);
   const { data: brands } = useAllBrandsQuery();
 
-
   const subCategories = category?.data?.subCategories;
   const subSubCategories = subCategory?.data?.subSubCategories;
 
@@ -69,9 +68,6 @@ export default function EditProduct() {
     }
   }, [product]);
 
-  
-
-
   const handleImageChange = (imageList, index) => {
     setVariants((prev) =>
       prev.map((variant, i) =>
@@ -79,7 +75,6 @@ export default function EditProduct() {
       ),
     );
   };
-
 
   const handleVariantChange = (e, index, field) => {
     const value = e.target.value;
@@ -130,10 +125,10 @@ export default function EditProduct() {
     if (variantEnabled) {
       const formattedVariants = variants?.map((variant) => {
         return {
-          attribute: variant?.variant,
+          attribute: "default",
           color: variant?.color,
           colorCode: variant?.colorCode,
-          style: variant?.style,
+          style: "default",
           size: variant?.size,
           stock: variant?.stock,
           price: variant?.price,
@@ -240,7 +235,7 @@ export default function EditProduct() {
                     value={categoryId}
                     onChange={(e) => setCategoryId(e.target.value)}
                   >
-                    <option value="" >Select Category</option>
+                    <option value="">Select Category</option>
                     {categories?.data?.map((category) => (
                       <option key={category?._id} value={category?._id}>
                         {category?.name}
@@ -377,24 +372,12 @@ export default function EditProduct() {
                 {variantEnabled && (
                   <div className="mt-4">
                     <h4 className="text-lg font-medium">Variant Values</h4>
-                    {variants.map((variant, index) => (
+                    {variants?.map((variant, index) => (
                       <div
                         key={index}
                         className="mb-4 flex flex-col gap-3 rounded border p-4"
                       >
                         <div className="grid gap-4 lg:grid-cols-3">
-                          <div>
-                            <p className="text-sm">Variant Name</p>
-                            <input
-                              type="text"
-                              value={variant?.variant || ""}
-                              onChange={(e) =>
-                                handleVariantChange(e, index, "variant")
-                              }
-                              className="w-full rounded border p-2"
-                              placeholder="Ex: color, size, etc"
-                            />
-                          </div>
                           <div>
                             <p className="text-sm">Color Name</p>
                             <input
@@ -431,18 +414,7 @@ export default function EditProduct() {
                               placeholder="Enter size"
                             />
                           </div>
-                          <div>
-                            <p className="text-sm">Style</p>
-                            <input
-                              type="text"
-                              value={variant?.style || ""}
-                              onChange={(e) =>
-                                handleVariantChange(e, index, "style")
-                              }
-                              className="w-full rounded border p-2"
-                              placeholder="Enter size"
-                            />
-                          </div>
+
                           <div>
                             <p className="text-sm">Stock</p>
                             <input

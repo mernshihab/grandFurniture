@@ -123,7 +123,7 @@ export default function MainHeader() {
               ))}
               <li>
                 <NavLink
-                  to={youtubeSocial?.url}
+                  to={`//${youtubeSocial?.url}`}
                   target="_blank"
                   className="block px-3 duration-200 hover:text-primary"
                 >

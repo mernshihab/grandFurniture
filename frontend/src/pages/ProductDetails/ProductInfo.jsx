@@ -52,6 +52,8 @@ export default function ProductInfo({ product, parcerDescription }) {
     image: item.image,
     color: item.color,
     colorCode: item.colorCode,
+    price: item.price,
+    stock: item.stock,
   }));
 
   const [selectedSize, setSelectedSize] = useState(null);
@@ -301,30 +303,30 @@ export default function ProductInfo({ product, parcerDescription }) {
 
         {colors?.length > 0 && (
           <div className="my-4">
-            <p className="font-semibold text-lg mb-1">Color</p>
-
-            <div className=" gap-2">
-              {colors?.map((clr, i) => (
-                <button
-                  key={i}
-                  onClick={() => {
-                    handelColorSelect(clr);
-                    setSelectedImage(clr?.image);
-                  }}
-                  className={`scale-[.96] rounded-lg border-2 px-2 py-1 text-sm duration-300 hover:scale-[1]`}
-                  style={{
-                    borderColor:
-                      clr.value === selectedColor?.colorCode && clr.colorCode,
-                    color:
-                      clr.colorCode === selectedColor?.colorCode &&
-                      clr?.colorCode,
-                  }}
-                >
-                  {clr?.color}
-                </button>
-              ))}
-            </div>
+          <p className="font-semibold text-lg mb-1">Color</p>
+          <div className="flex gap-2">
+            {colors?.map((clr, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  handelColorSelect(clr);
+                  setSelectedImage(clr?.image);
+                  setSelectedPrice(clr?.price);
+                }}
+                className={`rounded-lg border-2 px-2 py-1 text-sm duration-300 hover:scale-105 ${
+                  selectedColor?.colorCode === clr.colorCode ? "bg-primary text-white" : "bg-white text-black"
+                }`}
+                style={{
+                  borderColor: clr.colorCode,
+                  
+                }}
+              >
+                {clr?.color}
+              </button>
+            ))}
           </div>
+        </div>
+        
         )}
 
         {/* Sizes */}

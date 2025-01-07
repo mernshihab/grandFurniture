@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema(
     isVariant: { type: Boolean, default: false },
     variant: [
       {
-        attribute: { type: String, required: true },
+        attribute: { type: String},
         color: { type: String },
         colorCode: { type: String },
         style: { type: String },

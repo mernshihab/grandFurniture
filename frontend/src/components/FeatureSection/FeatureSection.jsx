@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useGetFeatureProjectsQuery } from "../../Redux/featureProject/featureProjectApi";
 import parse from "html-react-parser";
 
@@ -12,13 +13,13 @@ export default function FeatureSection() {
         <div className="grid gap-8 md:grid-cols-3">
           {features?.map((feature) => (
             <div key={feature?.id} className="text-center">
-              <div className="relative max-h-96 w-full overflow-hidden">
+              <Link to="/shops" className="relative max-h-96 w-full overflow-hidden">
                 <img
                   src={`${import.meta.env.VITE_BACKEND_URL}/${feature?.image}`}
                   alt={feature.title}
                   className="mb-4 h-96 w-full object-cover transition-transform duration-1000 hover:scale-105"
                 />
-              </div>
+              </Link>
               <h3 className="mb-2 mt-5 text-xl font-bold">{feature?.title}</h3>
               <p className="px-2 text-base leading-7 text-gray-600">
                 {feature?.description && parse(feature?.description)}

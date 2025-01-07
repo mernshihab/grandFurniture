@@ -63,7 +63,7 @@ const ChooseByCategory = () => {
           </p>
         </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-2 md:gap-14">{content}</div>
+        <div className="mt-4 grid grid-cols-2 gap-2 md:gap-20">{content}</div>
       </div>
     </div>
   );

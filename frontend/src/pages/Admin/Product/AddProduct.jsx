@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import JoditEditor from "jodit-react";
 import ImageUploading from "react-images-uploading";
@@ -33,6 +33,7 @@ export default function AddProduct() {
   const [featured, setFeatured] = useState(false);
   const [variantEnabled, setVariantEnabled] = useState(false);
   const [variants, setVariants] = useState([]);
+  const [firstVariantPrice, setFirstVariantPrice] = useState(null);
 
   const { data: colorsData } = useAllColorsQuery();
   const { data: categories } = useGetCategoriesQuery();
@@ -63,6 +64,16 @@ export default function AddProduct() {
       ),
     );
   };
+
+  useEffect(() => {
+    if (variants?.length > 0) {
+      setFirstVariantPrice(variants[0]?.price);
+    } else {
+      setFirstVariantPrice(null);
+    }
+  }, [variants]);
+
+  console.log("First Variant Price (Global):", firstVariantPrice);
 
   const [addProduct, { isLoading }] = useAddProductMutation();
 
@@ -102,10 +113,10 @@ export default function AddProduct() {
     if (variantEnabled) {
       const formattedVariants = variants?.map((variant) => {
         return {
-          attribute: variant?.variant,
+          attribute: "default",
           color: variant?.color,
           colorCode: variant?.colorCode,
-          style: variant?.style,
+          style: "default",
           size: variant?.size,
           stock: variant?.stock,
           price: variant?.price,
@@ -266,6 +277,7 @@ export default function AddProduct() {
                   <input
                     type="number"
                     name="sellingPrice"
+                    value={firstVariantPrice && firstVariantPrice}
                     onChange={(e) => setSellingPrice(e.target.value)}
                     required
                   />
@@ -332,18 +344,6 @@ export default function AddProduct() {
                       >
                         <div className="grid gap-4 lg:grid-cols-3">
                           <div>
-                            <p className="text-sm">Variant Name</p>
-                            <input
-                              type="text"
-                              value={variant?.variant || ""}
-                              onChange={(e) =>
-                                handleVariantChange(e, index, "variant")
-                              }
-                              className="w-full rounded border p-2"
-                              placeholder="Ex: color, size, etc"
-                            />
-                          </div>
-                          <div>
                             <p className="text-sm">Color Name</p>
                             <input
                               type="text"
@@ -380,18 +380,6 @@ export default function AddProduct() {
                             />
                           </div>
                           <div>
-                            <p className="text-sm">Style</p>
-                            <input
-                              type="text"
-                              value={variant?.style || ""}
-                              onChange={(e) =>
-                                handleVariantChange(e, index, "style")
-                              }
-                              className="w-full rounded border p-2"
-                              placeholder="Enter size"
-                            />
-                          </div>
-                          <div>
                             <p className="text-sm">Stock</p>
                             <input
                               type="number"
@@ -407,7 +395,7 @@ export default function AddProduct() {
                             <p className="text-sm">Price</p>
                             <input
                               type="number"
-                              defaultValue={sellingPrice}
+                              // defaultValue={sellingPrice}
                               onChange={(e) =>
                                 handleVariantChange(e, index, "price")
                               }

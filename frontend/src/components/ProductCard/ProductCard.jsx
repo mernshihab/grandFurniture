@@ -1,14 +1,17 @@
 import { Link } from "react-router-dom";
 
 export default function ProductCard({ product, discount: flashDiscount = 0 }) {
-  const { slug, thumbnail, title, sellingPrice, discount } = product;
+  const { slug, thumbnail, title, sellingPrice, discount, totalStock } =
+    product;
 
   const newDiscount = parseInt(flashDiscount) + discount;
+
+  console.log(totalStock);
 
   return (
     <>
       <div className="product_card">
-        <div className="flex h-full flex-col justify-between">
+        <div className="relative flex h-full flex-col justify-between">
           <Link
             onClick={() => {
               sessionStorage.setItem("discount", newDiscount);
@@ -34,6 +37,16 @@ export default function ProductCard({ product, discount: flashDiscount = 0 }) {
               {title.length > 45 ? `${title.slice(0, 45)}...` : title}
             </h1>
           </Link>
+
+          {totalStock === 0 ? (
+            <p className="absolute right-0 top-0 bg-black/90 px-2 py-1.5 text-xs font-semibold text-white sm:text-sm">
+              Stock Out
+            </p>
+          ) : (
+            <div className="absolute right-0 top-1 w-max rounded-l-full bg-red-600 px-2 py-px text-base-100">
+              <p>{newDiscount}%</p>
+            </div>
+          )}
 
           <div>
             <div className="p-2 pt-0">
