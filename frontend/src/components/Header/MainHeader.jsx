@@ -37,7 +37,7 @@ export default function MainHeader() {
 
   useEffect(() => {
     if (categoyData?.data) {
-      const categories = categoyData.data;
+      const categories = categoyData?.data;
       const filteredCategory = categories?.filter(
         (category) => category?.name === "Table",
       )[0]?.subCategories[0];

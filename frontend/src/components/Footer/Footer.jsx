@@ -14,7 +14,7 @@ export default function Footer() {
   const { data: contact, isLoading: contactLoading } = useGetContactQuery();
   const { data: logo, isLoading: logoLoading } = useGetMainLogoQuery();
 
-  const fiveCategories = data?.data.slice(0, 5);
+  const fiveCategories = data?.data?.slice(0, 5);
 
   const { data: business } = useGetBusinessInfoQuery();
   const businessInfo = business?.data[0];

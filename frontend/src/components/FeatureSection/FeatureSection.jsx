@@ -16,7 +16,7 @@ export default function FeatureSection() {
               <Link to="/shops" className="relative max-h-96 w-full overflow-hidden">
                 <img
                   src={`${import.meta.env.VITE_BACKEND_URL}/${feature?.image}`}
-                  alt={feature.title}
+                  alt={feature?.title}
                   className="mb-4 h-96 w-full object-cover transition-transform duration-1000 hover:scale-105"
                 />
               </Link>
