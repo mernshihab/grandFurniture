@@ -139,13 +139,13 @@ const adminSidebarItems = [
         path: "/admin/banner/main/all",
       },
       {
-        title: "Shop Campaign Banner",
-        path: "/admin/banner/shop-banner",
-      },
-      {
         title: "Campaign Banners",
         path: "/admin/banner/campaign-banners",
       },
+      {
+        title: "Shop Campaign Products",
+        path: "/admin/banner/shop-banner",
+      }
     ],
   },
   {

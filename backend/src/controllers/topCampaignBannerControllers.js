@@ -11,7 +11,20 @@ exports.addTopCampaignBanner = async (req, res) => {
       });
     }
 
-    const result = await TopCampaignBanner.create({ image: image });
+    const { title, description } = req.body;
+
+    if (!title || !description || !image) {
+      return res.json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
+    const result = await TopCampaignBanner.create({
+      image,
+      title,
+      description,
+    });
 
     if (!result) {
       if (image) {
@@ -84,6 +97,8 @@ exports.updateBanner = async (req, res) => {
         message: "banner is required",
       });
     }
+
+    
 
     const id = req?.params?.id;
     const isBanner = await TopCampaignBanner.findOne({ _id: id });
