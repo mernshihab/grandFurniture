@@ -239,7 +239,20 @@ exports.updateProduct = async (req, res) => {
       });
     }
 
-    const { title, variants } = req.body;
+    const {
+      title,
+      variants,
+      category,
+      subCategory,
+      brand,
+      sellingPrice,
+      purchasePrice,
+      totalStock,
+      discount,
+      featured,
+      desription,
+      isVariant,
+    } = req.body;
 
     // Prepare the product update data by copying the existing product
     const productUpdateData = { ...existingProduct.toObject() };
@@ -247,6 +260,58 @@ exports.updateProduct = async (req, res) => {
     // Update thumbnail if provided, else keep existing
     if (thumbnail) {
       productUpdateData.thumbnail = thumbnail;
+    }
+
+    if (category) {
+      const targetedCategory = await Categories.findOne({
+        slug: category && category,
+      });
+      const categoryId = targetedCategory?._id;
+      productUpdateData.category = categoryId;
+    }
+
+    if (subCategory) {
+      const targetedSubCategory = await SubCategory.findOne({
+        slug: subCategory && subCategory,
+      });
+      const subCategoryId = targetedSubCategory?._id;
+      productUpdateData.subCategory = subCategoryId;
+    }
+
+    if (brand) {
+      const targetedBrand = await Brand.findOne({
+        slug: brand && brand,
+      });
+      const brandName = targetedBrand?.name;
+      productUpdateData.brand = brandName;
+    }
+
+    if (sellingPrice) {
+      productUpdateData.sellingPrice = sellingPrice;
+    }
+
+    if (purchasePrice) {
+      productUpdateData.purchasePrice = purchasePrice;
+    }
+
+    if (totalStock) {
+      productUpdateData.totalStock = totalStock;
+    }
+
+    if (discount) {
+      productUpdateData.discount = discount;
+    }
+
+    if (featured) {
+      productUpdateData.featured = featured;
+    }
+
+    if (desription) {
+      productUpdateData.desription = desription;
+    }
+
+    if (isVariant) {
+      productUpdateData.isVariant = isVariant;
     }
 
     // Update title and slug if the title has changed
