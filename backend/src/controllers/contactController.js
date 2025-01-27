@@ -4,7 +4,6 @@ exports.updateContact = async (req, res) => {
   try {
     const { id } = req?.params;
     const data = req?.body;
-
     const contact = await Contact.findById(id);
 
     if (!contact) {

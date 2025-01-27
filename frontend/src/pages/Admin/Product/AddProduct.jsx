@@ -73,7 +73,6 @@ export default function AddProduct() {
     }
   }, [variants]);
 
-  console.log("First Variant Price (Global):", firstVariantPrice);
 
   const [addProduct, { isLoading }] = useAddProductMutation();
 

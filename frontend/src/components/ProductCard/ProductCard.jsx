@@ -6,7 +6,6 @@ export default function ProductCard({ product, discount: flashDiscount = 0 }) {
 
   const newDiscount = parseInt(flashDiscount) + discount;
 
-  console.log(totalStock);
 
   return (
     <>
@@ -39,7 +38,7 @@ export default function ProductCard({ product, discount: flashDiscount = 0 }) {
           </Link>
 
           {totalStock === 0 ? (
-            <p className="absolute right-0 top-0 bg-black/90 px-2 py-1.5 text-xs font-semibold text-white sm:text-sm">
+            <p className="absolute right-0 top-0 bg-red-600 px-2 py-1.5 text-xs font-semibold text-white sm:text-sm">
               Stock Out
             </p>
           ) : (

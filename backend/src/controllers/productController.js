@@ -30,11 +30,11 @@ exports.addProduct = async (req, res) => {
 
   let product = {
     ...req.body,
-    slug: slugify(`${title}-${Date.now()}`), 
+    slug: slugify(`${title}-${Date.now()}`),
     thumbnail,
   };
 
-  const variants = JSON.parse(req.body.variants);
+  const variants = req.body.variants ? JSON.parse(req.body.variants) : null;
 
   if (variants && variants?.length > 0) {
     try {

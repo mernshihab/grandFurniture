@@ -105,6 +105,10 @@ export default function ProductInfo({ product, parcerDescription }) {
     if (variant?.length > 0 && !selectedColor) {
       return Swal.fire("", "Please Select Color", "warning");
     }
+
+    if(selectedStock === 0) {
+      return Swal.fire("", "Product is out of stock", "warning");
+    }
   
     const cartProduct = {
       _id: product._id,
@@ -128,6 +132,10 @@ export default function ProductInfo({ product, parcerDescription }) {
   
     if (variant?.length > 0 && !selectedColor) {
       return Swal.fire("", "Please Select Color", "warning");
+    }
+
+    if(selectedStock === 0) {
+      return Swal.fire("", "Product is out of stock", "warning");
     }
   
     const cartProduct = {
@@ -359,7 +367,7 @@ export default function ProductInfo({ product, parcerDescription }) {
             In Stock
           </p>
         ) : (
-          <p className="text-lg">Out of Stock</p>
+          <p className="text-lg text-red-600">Out of Stock</p>
         )}
 
         <p className="flex items-center gap-2 text-lg">

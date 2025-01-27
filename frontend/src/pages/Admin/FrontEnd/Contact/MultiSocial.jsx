@@ -26,9 +26,10 @@ export default function MultiSocial({
   setSocials: setSocial,
 }) {
   const handleInputChange = (index, event) => {
-    const values = [...social];
-    values[index].url = event.target.value;
-    setSocial(values);
+    const updatedSocial = social.map((item, idx) => 
+      idx === index ? { ...item, url: event.target.value } : item
+    );
+    setSocial(updatedSocial);
   };
 
   const handleIconChange = (index, event) => {
@@ -60,12 +61,12 @@ export default function MultiSocial({
       {social?.map((input, index) => (
         <div key={index} className="flex gap-2 text-sm">
           <select
-            defaultValue={input.icon}
+            value={input.icon}
             onChange={(event) => handleIconChange(index, event)}
           >
-            <option defaultValue="">Select Platform</option>
+            <option value="">Select Platform</option>
             {iconOptions.map((option) => (
-              <option key={option.value} defaultValue={option.value}>
+              <option key={option.value} value={option.value}>
                 {option.label}
               </option>
             ))}
