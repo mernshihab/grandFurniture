@@ -1,43 +1,32 @@
-import { TbTruckDelivery } from "react-icons/tb";
-import { MdVerified } from "react-icons/md";
-import { BiSupport } from "react-icons/bi";
+import { useGetFeaturesQuery } from "../../../Redux/feature/featureApi";
+import parse from "html-react-parser";
 
 const Services = () => {
+  const { data } = useGetFeaturesQuery();
+  const features = data?.data;
+
+  console.log(features);
   return (
-    <div className="md:py-20 py-8 bg-white">
+    <div className="bg-white py-8 md:py-20">
       <div className="container mx-auto">
-        <div data-aos="fade-up" className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
+        <div
+          data-aos="fade-up"
+          className="grid gap-8 text-center sm:grid-cols-2 lg:grid-cols-3"
+        >
           {/* Free Delivery */}
-          <div className="flex flex-col items-center">
-            <TbTruckDelivery className="text-6xl text-black mb-4" />
-            <h6 className="text-xl font-semibold mb-2">Free Delivery</h6>
-            <p className="text-sm text-gray-600">
-              FREE home delivery with assembling inside Dhaka within 3 days and
-              5-7 days anywhere in Bangladesh. Inside Dhaka City, we offer free
-              home delivery to the ground floor through courier.
-            </p>
-          </div>
-
-          {/* Returns & Warranty */}
-          <div className="flex flex-col items-center">
-            <MdVerified className="text-6xl text-black mb-4" />
-            <h6 className="text-xl font-semibold mb-2">Returns & Warranty</h6>
-            <p className="text-sm text-gray-600">
-              GRID provides an easy, hassle-free servicing system where we pick
-              up your product from your home if there is any problem and get it
-              back to you.
-            </p>
-          </div>
-
-          {/* EMI Policy */}
-          <div className="flex flex-col items-center">
-            <BiSupport className="text-6xl text-black mb-4" />
-            <h6 className="text-xl font-semibold mb-2">EMI Policy</h6>
-            <p className="text-sm text-gray-600">
-              To avail EMI, place your order through our website and share your
-              order ID in our inbox. We will share the EMI payment link.
-            </p>
-          </div>
+          {features?.map((feature) => (
+            <div key={feature?._id} className="flex flex-col items-center">
+              <img
+                src={`${import.meta.env.VITE_BACKEND_URL}/${feature?.image}`}
+                alt="Icon"
+                className="h-12 w-12 object-cover"
+              />
+              <h6 className="mb-2 text-xl font-semibold">{feature?.title}</h6>
+              <p className="text-sm text-gray-600">
+                {feature?.description && parse(feature?.description)}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

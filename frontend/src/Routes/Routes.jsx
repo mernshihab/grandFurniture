@@ -26,6 +26,9 @@ import AdminReturnPolicy from "../pages/Admin/ReturnPolicy/AdminReturnPolicy";
 import PrivacyPolicy from "../pages/PrivacyPolicy";
 import TermsCondition from "../pages/TermsCondition";
 import ReturnPolicy from "../pages/ReturnPolicy";
+import FeaturesList from "../pages/Admin/Features/FeaturesList";
+import AddFeature from "../pages/Admin/Features/AddFeature";
+import EditFeature from "../pages/Admin/Features/EditFeature";
 
 // Main pages
 const Cart = React.lazy(() => import("../pages/Cart/Cart"));
@@ -538,6 +541,18 @@ export const routes = createBrowserRouter([
       {
         path: "/admin/featured/edit/:id",
         element: <EditFeaturesProject />,
+      },
+      {
+        path: "/admin/feature",
+        element: <FeaturesList />,
+      },
+      {
+        path: "/admin/feature/add",
+        element: <AddFeature />,
+      },
+      {
+        path: "/admin/feature/edit/:id",
+        element: <EditFeature />,
       },
 
       //--------------Flash Deal

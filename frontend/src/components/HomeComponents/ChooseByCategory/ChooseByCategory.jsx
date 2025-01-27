@@ -6,7 +6,6 @@ const ChooseByCategory = () => {
   const { data, isLoading, isError, error } = useGetCategoriesQuery();
   const categories = data?.data;
 
-  console.log(categories);
 
   let content = null;
   if (isLoading) {

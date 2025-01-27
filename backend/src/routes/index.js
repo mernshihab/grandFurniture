@@ -37,6 +37,7 @@ const orderRouter = require("./orderRoutes");
 const paymentRouter = require("./paymentRoute");
 
 const featureProjectRoutes = require("./featureProjectRoutes");
+const featureRoute = require("./featureRoutes");
 
 const privacy = require("./privacyRoute");
 const termcondition = require("./termconditionRoute");
@@ -69,6 +70,7 @@ router.use("/review", reviewRouter);
 router.use("/topCampaignBanner", topCampaignBannerRouter);
 router.use("/campaignBanner", campaignBanner);
 router.use("/featureProject", featureProjectRoutes);
+router.use("/feature", featureRoute);
 
 router.use("/coupon", couponRouter);
 router.use("/seo", seoRouter);
