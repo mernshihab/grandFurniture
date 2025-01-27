@@ -19,7 +19,7 @@ export default function Home() {
     <>
       <Hero />
       <ChooseByCategory />
-      <ShopBannerCom />
+      {/* <ShopBannerCom /> */}
       <FlashSale />
       <FeaturedProducts />
       <VideoSection />
