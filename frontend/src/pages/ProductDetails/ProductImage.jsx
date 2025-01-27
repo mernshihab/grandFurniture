@@ -30,17 +30,7 @@ export default function ProductImage({ thumbnail, galleries, discount }) {
           loading="lazy"
         /> */}
 
-        <div className="flex items-center justify-center gap-8">
-          <div className="group relative">
-            {/* Main Image */}
-            <img
-              ref={imageRef}
-              src={`${import.meta.env.VITE_BACKEND_URL}/products/${showImage}`}
-              alt="Zoomable"
-              className="h-[500px] w-[500px] rounded-md object-cover"
-            />
-          </div>
-        </div>
+        
 
         {/* <InnerImageZoom
           src={`${import.meta.env.VITE_BACKEND_URL}/products/${showImage}`}
