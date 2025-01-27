@@ -2,6 +2,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Autoplay, Navigation } from "swiper/modules";
 import React, { useEffect, useState } from "react";
+import ImageZoom from "react-image-zoom";
 import "react-inner-image-zoom/lib/InnerImageZoom/styles.min.css";
 
 export default function ProductImage({ thumbnail, galleries, discount }) {
@@ -10,17 +11,13 @@ export default function ProductImage({ thumbnail, galleries, discount }) {
     setShowImage(thumbnail);
   }, [thumbnail]);
 
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
   const imageRef = React.useRef(null);
 
-  // Handle mouse movement to calculate position for zoomed image
-  const handleMouseMove = (e) => {
-    const { left, top, width, height } =
-      imageRef.current.getBoundingClientRect();
-    const x = ((e.clientX - left) / width) * 100;
-    const y = ((e.clientY - top) / height) * 100;
-    setMousePos({ x, y });
+  const zoomProps = {
+    width: 400,
+    height: 400,
+    zoomWidth: 500,
+    img: `${import.meta.env.VITE_BACKEND_URL}/products/${showImage}`,
   };
 
   return (
@@ -34,12 +31,7 @@ export default function ProductImage({ thumbnail, galleries, discount }) {
         /> */}
 
         <div className="flex items-center justify-center gap-8">
-          <div
-            className="group relative"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            onMouseMove={handleMouseMove}
-          >
+          <div className="group relative">
             {/* Main Image */}
             <img
               ref={imageRef}
@@ -47,18 +39,6 @@ export default function ProductImage({ thumbnail, galleries, discount }) {
               alt="Zoomable"
               className="h-[500px] w-[500px] rounded-md object-cover"
             />
-
-            {/* Zoomed Image */}
-            {isHovered && (
-              <div
-                className="absolute left-full top-0 z-40 ml-4 h-[400px] w-[400px] overflow-hidden rounded-md border border-gray-400"
-                style={{
-                  backgroundImage: `url(${import.meta.env.VITE_BACKEND_URL}/products/${showImage})`,
-                  backgroundSize: "300%", // Increase this to control zoom level
-                  backgroundPosition: `${mousePos.x}% ${mousePos.y}%`,
-                }}
-              ></div>
-            )}
           </div>
         </div>
 
@@ -69,7 +49,7 @@ export default function ProductImage({ thumbnail, galleries, discount }) {
           className="h-[380px] w-full rounded object-cover"
           loading="lazy"
         /> */}
-
+        <ImageZoom {...zoomProps} />
         {/* Discount */}
         {discount > 0 && (
           <div className="absolute right-0 top-1 w-max rounded-l-full bg-red-600 px-2 py-px text-base-100">
