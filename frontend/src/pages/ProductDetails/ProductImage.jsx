@@ -54,22 +54,12 @@ export default function ProductImage({ thumbnail, galleries, discount }) {
               <img
                 src={`${import.meta.env.VITE_BACKEND_URL}/products/${img}`}
                 alt={img}
-                className="h-20 w-full cursor-pointer rounded object-cover"
+                className="h-20 border p-1.5 w-full cursor-pointer rounded object-cover"
                 loading="lazy"
                 onClick={() => setShowImage(img)}
               />
             </SwiperSlide>
           ))}
-
-          <SwiperSlide>
-            <img
-              src={`${import.meta.env.VITE_BACKEND_URL}/products/${thumbnail}`}
-              alt="thumbnail"
-              className="h-20 w-full cursor-pointer rounded object-cover"
-              loading="lazy"
-              onClick={() => setShowImage(thumbnail)}
-            />
-          </SwiperSlide>
         </Swiper>
       </div>
     </div>

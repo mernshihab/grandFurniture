@@ -23,6 +23,8 @@ export default function Cart() {
     0,
   );
 
+  console.log("total", carts);
+
   useEffect(() => {
     window.scrollTo(0, 0);
 

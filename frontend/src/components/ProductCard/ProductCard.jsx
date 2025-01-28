@@ -56,7 +56,7 @@ export default function ProductCard({ product, discount: flashDiscount = 0 }) {
                   </del>
                 )}
                 <p className="text-sm sm:text-lg">
-                  Tk
+                  Tk{" "}
                   {parseInt(
                     sellingPrice - (sellingPrice * newDiscount) / 100,
                   ).toLocaleString()}

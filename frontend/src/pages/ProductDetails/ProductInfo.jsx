@@ -26,8 +26,6 @@ export default function ProductInfo({ product, parcerDescription }) {
 
   const discount = sessionStorage.getItem("discount");
 
-  console.log(product);
-
   const {
     title,
     thumbnail,
@@ -40,7 +38,6 @@ export default function ProductInfo({ product, parcerDescription }) {
     variant,
   } = product;
 
-  console.log(product);
   const [selectedImage, setSelectedImage] = useState(thumbnail);
 
   const sizes = variant?.map((item) => item.size);
@@ -63,7 +60,26 @@ export default function ProductInfo({ product, parcerDescription }) {
   const [selectedSku, setSelectedSku] = useState();
 
   const [selectedQuantity, setSelectedQuantity] = useState(1);
-  
+  const updateSelectedSku = (size, color) => {
+    if (size || color) {
+      const selectedVariant = variant?.find((item) => {
+        const sizeMatch = size && item.size ? item?.size === size : true;
+        const colorMatch = item?.color === color?.color;
+
+        return sizeMatch && colorMatch;
+      });
+
+      if (selectedVariant) {
+        setSelectedSku(
+          `${selectedVariant?.size || ""}${selectedVariant?.color || ""}`,
+        );
+        setSelectedPrice(selectedVariant?.price);
+        setSelectedStock(selectedVariant?.stock);
+      } else {
+        console.log("Variant not found");
+      }
+    }
+  };
 
   const handelSelectSize = (size) => {
     if (selectedSize === size) {
@@ -71,7 +87,7 @@ export default function ProductInfo({ product, parcerDescription }) {
     } else {
       setSelectedSize(size);
     }
-    updateSelectedSku(size, selectedColor)
+    updateSelectedSku(size, selectedColor);
   };
 
   const handelColorSelect = (clr) => {
@@ -84,32 +100,21 @@ export default function ProductInfo({ product, parcerDescription }) {
     updateSelectedSku(selectedSize, clr);
   };
 
-  const updateSelectedSku = (size, color) => {
-    if (size && color) {
-      const selectedVariant = variant?.find(
-        (item) => item.size === size && item.color === color
-      );
-      if (selectedVariant) {
-        setSelectedSku(selectedVariant.sku); // Set the selected SKU
-        setSelectedPrice(selectedVariant.price); // Set the price of the selected variant
-        setSelectedStock(selectedVariant.stock); // Set the stock of the selected variant
-      }
-    }
-  };
-
   const handleBuyNow = () => {
-    if (variant?.length > 0 && !selectedSize) {
+    const sizeExists = variant.some((item) => item.size);
+    if (sizeExists && !selectedSize) {
       return Swal.fire("", "Please Select Size", "warning");
     }
-  
-    if (variant?.length > 0 && !selectedColor) {
+
+    const colorExists = variant.some((item) => item.color);
+    if (colorExists && !selectedColor) {
       return Swal.fire("", "Please Select Color", "warning");
     }
 
-    if(selectedStock === 0) {
+    if (selectedStock === 0) {
       return Swal.fire("", "Product is out of stock", "warning");
     }
-  
+
     const cartProduct = {
       _id: product._id,
       discount: discount,
@@ -117,27 +122,29 @@ export default function ProductInfo({ product, parcerDescription }) {
       thumbnail,
       title,
       quantity: selectedQuantity,
-      sku: selectedSku, // Use the selected SKU
+      sku: selectedSku,
       stock: selectedStock,
     };
-  
+
     dispatch(addToCart([cartProduct]));
     navigate("/checkout");
   };
 
   const handelAddToCart = () => {
-    if (variant?.length > 0 && !selectedSize) {
+    const sizeExists = variant.some((item) => item.size);
+    if (sizeExists && !selectedSize) {
       return Swal.fire("", "Please Select Size", "warning");
     }
-  
-    if (variant?.length > 0 && !selectedColor) {
+
+    const colorExists = variant.some((item) => item.color);
+    if (colorExists && !selectedColor) {
       return Swal.fire("", "Please Select Color", "warning");
     }
 
-    if(selectedStock === 0) {
+    if (selectedStock === 0) {
       return Swal.fire("", "Product is out of stock", "warning");
     }
-  
+
     const cartProduct = {
       _id: product._id,
       discount: discount,
@@ -145,15 +152,15 @@ export default function ProductInfo({ product, parcerDescription }) {
       thumbnail,
       title,
       quantity: selectedQuantity,
-      sku: selectedSku, // Use the selected SKU
+      sku: selectedSku,
       stock: selectedStock,
     };
-  
+
     if (carts?.length > 0) {
       const findProduct = carts?.find(
-        (p) => p._id === cartProduct._id && selectedSku === p.sku
+        (p) => p._id === cartProduct._id && selectedSku === p.sku,
       );
-  
+
       if (findProduct) {
         return toast.error("Product already added to cart");
       } else {
@@ -164,7 +171,7 @@ export default function ProductInfo({ product, parcerDescription }) {
       dispatch(addToCart([cartProduct]));
       toast.success("Item added to cart successfully");
     }
-  
+
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: "add_to_cart",
@@ -283,7 +290,7 @@ export default function ProductInfo({ product, parcerDescription }) {
         </div>
 
         {/* Price */}
-        <div className="mt-3 flex border-b items-center justify-between py-3 pr-2">
+        <div className="mt-3 flex items-center justify-between border-b py-3 pr-2">
           <div className="flex items-center gap-6">
             <p className="text-neutral-content">Price: </p>
 
@@ -311,49 +318,55 @@ export default function ProductInfo({ product, parcerDescription }) {
 
         {colors?.length > 0 && (
           <div className="my-4">
-          <p className="font-semibold text-lg mb-1">Color</p>
-          <div className="flex gap-2">
-            {colors?.map((clr, i) => (
-              <button
-                key={i}
-                onClick={() => {
-                  handelColorSelect(clr);
-                  setSelectedImage(clr?.image);
-                  setSelectedPrice(clr?.price);
-                }}
-                className={`rounded-lg border-2 px-2 py-1 text-sm duration-300 hover:scale-105 ${
-                  selectedColor?.colorCode === clr.colorCode ? "bg-primary text-white" : "bg-white text-black"
-                }`}
-                style={{
-                  borderColor: clr.colorCode,
-                  
-                }}
-              >
-                {clr?.color}
-              </button>
-            ))}
+            <p className="mb-1 text-lg font-semibold">Color</p>
+            <div className="flex gap-2">
+              {colors?.map(
+                (clr, i) =>
+                  clr?.color && (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        handelColorSelect(clr);
+                        setSelectedImage(clr?.image);
+                        setSelectedPrice(clr?.price);
+                      }}
+                      className={`rounded-lg border-2 px-2 py-1 text-sm duration-300 hover:scale-105 ${
+                        selectedColor?.colorCode === clr.colorCode
+                          ? "bg-primary text-white"
+                          : "bg-white text-black"
+                      }`}
+                      style={{
+                        borderColor: clr.colorCode,
+                      }}
+                    >
+                      {clr?.color}
+                    </button>
+                  ),
+              )}
+            </div>
           </div>
-        </div>
-        
         )}
 
         {/* Sizes */}
         {sizes?.length > 0 && sizes[0] && (
-          <div className="my-4  gap-4">
-            <p className="font-semibold text-lg mb-1">Size</p>
+          <div className="my-4 gap-4">
+            <p className="mb-1 text-lg font-semibold">Size</p>
 
             <div className="">
-              {sizes?.map((size) => (
-                <button
-                  key={size}
-                  onClick={() => handelSelectSize(size)}
-                  className={`${
-                    size === selectedSize && "bg-primary text-base-100"
-                  } scale-[.96] rounded border px-2.5 my-1.5 py-1.5 text-[15px] duration-300 hover:scale-[1] hover:border-primary`}
-                >
-                  {size}
-                </button>
-              ))}
+              {sizes?.map(
+                (size) =>
+                  size && (
+                    <button
+                      key={size}
+                      onClick={() => handelSelectSize(size)}
+                      className={`${
+                        size === selectedSize && "bg-primary text-base-100"
+                      } my-1.5 scale-[.96] rounded border px-2.5 py-1.5 text-[15px] duration-300 hover:scale-[1] hover:border-primary`}
+                    >
+                      {size}
+                    </button>
+                  ),
+              )}
             </div>
           </div>
         )}
