@@ -1,5 +1,4 @@
 import CampaignBanner from "../../components/HomeComponents/Campaign/CampaignBanner/CampaignBanner";
-import ShopBannerCom from "../../components/HomeComponents/Campaign/ShopBannerCom/ShopBannerCom";
 import ChooseByCategory from "../../components/HomeComponents/ChooseByCategory/ChooseByCategory";
 import Clients from "../../components/HomeComponents/Clients/Clients";
 import FeaturedProducts from "../../components/HomeComponents/FeaturedProducts/FeaturedProducts";
@@ -19,7 +18,6 @@ export default function Home() {
     <>
       <Hero />
       <ChooseByCategory />
-      {/* <ShopBannerCom /> */}
       <FlashSale />
       <FeaturedProducts />
       <VideoSection />

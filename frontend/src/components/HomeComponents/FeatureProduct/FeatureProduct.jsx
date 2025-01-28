@@ -4,9 +4,7 @@ import { useGetTopCampaignBannersQuery } from "../../../Redux/topCampaignBanner"
 import parse from "html-react-parser";
 
 export default function FeatureProduct() {
-  const { data, isLoading } = useGetTopCampaignBannersQuery();
-
-  console.log(data?.data[0]);
+  const { data } = useGetTopCampaignBannersQuery();
 
   return (
     <section className="py-10">

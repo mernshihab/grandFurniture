@@ -1,7 +1,7 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Autoplay, Navigation } from "swiper/modules";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ImageZoom from "react-image-zoom";
 import "react-inner-image-zoom/lib/InnerImageZoom/styles.min.css";
 
@@ -10,8 +10,6 @@ export default function ProductImage({ thumbnail, galleries, discount }) {
   useEffect(() => {
     setShowImage(thumbnail);
   }, [thumbnail]);
-
-  const imageRef = React.useRef(null);
 
   const zoomProps = {
     width: 400,
@@ -23,24 +21,7 @@ export default function ProductImage({ thumbnail, galleries, discount }) {
   return (
     <div className="w-full">
       <div className="relative">
-        {/* <img
-          src={`${import.meta.env.VITE_BACKEND_URL}/products/${showImage}`}
-          alt="thumbnail"
-          className="h-[350px] w-full rounded"
-          loading="lazy"
-        /> */}
-
-        
-
-        {/* <InnerImageZoom
-          src={`${import.meta.env.VITE_BACKEND_URL}/products/${showImage}`}
-          zoomSrc={`${import.meta.env.VITE_BACKEND_URL}/products/${showImage}`}
-          zoomType="hover"
-          className="h-[380px] w-full rounded object-cover"
-          loading="lazy"
-        /> */}
         <ImageZoom {...zoomProps} />
-        {/* Discount */}
         {discount > 0 && (
           <div className="absolute right-0 top-1 w-max rounded-l-full bg-red-600 px-2 py-px text-base-100">
             <p>{discount}%</p>
@@ -84,7 +65,7 @@ export default function ProductImage({ thumbnail, galleries, discount }) {
             <img
               src={`${import.meta.env.VITE_BACKEND_URL}/products/${thumbnail}`}
               alt="thumbnail"
-              className="h-14 w-full cursor-pointer rounded object-cover"
+              className="h-20 w-full cursor-pointer rounded object-cover"
               loading="lazy"
               onClick={() => setShowImage(thumbnail)}
             />
