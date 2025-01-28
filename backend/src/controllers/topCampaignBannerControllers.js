@@ -90,41 +90,62 @@ exports.getTopCampaignBanner = async (req, res) => {
 
 exports.updateBanner = async (req, res) => {
   try {
-    const banner = req?.file?.filename;
-    if (!banner) {
+    const image = req?.file?.filename;
+    const { title, description } = req.body;
+    const id = req?.params?.id;
+
+    if (!id) {
       return res.json({
         success: false,
-        message: "banner is required",
+        message: "Banner ID is required",
       });
     }
 
-    
+    const existingBanner = await TopCampaignBanner.findOne({ _id: id });
 
-    const id = req?.params?.id;
-    const isBanner = await TopCampaignBanner.findOne({ _id: id });
+    if (!existingBanner) {
+      if (image) {
+        fs.unlink(`./uploads/banner/${image}`, (err) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+        });
+      }
+      return res.json({
+        success: false,
+        message: "Banner not found",
+      });
+    }
 
-    if (isBanner) {
-      await TopCampaignBanner.findByIdAndUpdate(
-        id,
-        { image: banner },
-        { new: true }
-      );
+    const updateData = {};
+    if (title) updateData.title = title;
+    if (description) updateData.description = description;
+    if (image) updateData.image = image;
 
-      fs.unlink(`./uploads/banner/${isBanner?.image}`, (err) => {
+    const updatedBanner = await TopCampaignBanner.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true }
+    );
+
+    if (image && existingBanner.image) {
+      fs.unlink(`./uploads/banner/${existingBanner.image}`, (err) => {
         if (err) {
           console.error(err);
           return;
         }
       });
-
-      res.status(200).json({
-        success: true,
-        message: "Top Campaign Banner updated success",
-      });
     }
+
+    res.status(200).json({
+      success: true,
+      message: "Top Campaign Banner updated successfully",
+      data: updatedBanner,
+    });
   } catch (error) {
-    if (banner) {
-      fs.unlink(`./uploads/banner/${banner}`, (err) => {
+    if (image) {
+      fs.unlink(`./uploads/banner/${image}`, (err) => {
         if (err) {
           console.error(err);
           return;

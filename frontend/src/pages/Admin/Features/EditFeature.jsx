@@ -161,7 +161,7 @@ export default function EditFeature() {
           </div>
 
           <div className="mt-6">
-            <button className="admin_btn" disabled={isUpdating}>
+            <button className="primary_btn" disabled={isUpdating}>
               {isUpdating ? "Updating..." : "Edit Project"}
             </button>
           </div>

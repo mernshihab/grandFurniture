@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import { useCreateFeatureMutation } from "../../../Redux/feature/featureApi";
 
 export default function AddFeature() {
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const editor = useRef(null);
 
   const [image, setImage] = useState([]);
@@ -133,5 +133,5 @@ const navigate = useNavigate();
         </div>
       </form>
     </section>
-  )
+  );
 }
